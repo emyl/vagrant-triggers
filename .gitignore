@@ -1,0 +1,11 @@
+.DS_Store
+
+.bundle
+pkg/*
+Gemfile.lock
+
+.rspec
+
+.vagrant
+.vagrant.d/*
+Vagrantfile
