@@ -1,0 +1,8 @@
+en:
+  vagrant_triggers:
+    errors:
+      command_failed: |-
+        The command "%{command}" returned a failed exit code. The
+        error output is shown below:
+
+        %{stderr}
