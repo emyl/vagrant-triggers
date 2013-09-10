@@ -20,6 +20,11 @@ describe VagrantPlugins::Triggers::Config do
       config.after :up, :exec => "echo ls"
       expect(config.triggers).to have(2).items
     end
+
+    it "should record multiple entries if the action is an array" do
+      config.before [:up, :halt], :exec => "echo ls"
+      expect(config.triggers).to have(2).items
+    end
   end
 
   describe "validation" do
