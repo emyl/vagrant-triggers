@@ -18,12 +18,14 @@ Installation is performed in the prescribed manner for Vagrant 1.1+ plugins.
 The following ```Vagrantfile``` configuration options are added:
 
 ```
-config.trigger.before :command, :execute => "script"
+trigger.before :command, { :option => "value", ... }
 ```
 
 ```
-config.trigger.after :command, :execute => "script"
+trigger.after :command, { :option => "value", ... }
 ```
+
+The first argument is the command in which the trigger will be tied. It could be an array (e.g. ```[:up, :resume]```) in case of multiple commands.
 
 ### Options
 
@@ -40,10 +42,9 @@ In the following example a VirtualBox VM (not managed by Vagrant) will be tied t
 Vagrant.configure("2") do |config|
 
   {
-    :halt => "controlvm 22aed8b3-d246-40d5-8ad4-176c17552c43 acpipowerbutton",
-    :resume => "startvm 22aed8b3-d246-40d5-8ad4-176c17552c43 --type headless",
-    :suspend => "controlvm 22aed8b3-d246-40d5-8ad4-176c17552c43 savestate",
-    :up => "startvm 22aed8b3-d246-40d5-8ad4-176c17552c43 --type headless"
+    [:up, :resume] => "startvm 22aed8b3-d246-40d5-8ad4-176c17552c43 --type headless",
+    :suspend       => "controlvm 22aed8b3-d246-40d5-8ad4-176c17552c43 savestate",
+    :halt          => "controlvm 22aed8b3-d246-40d5-8ad4-176c17552c43 acpipowerbutton",
   }.each do |command, trigger|
     config.trigger.before command, :execute => "vboxmanage #{trigger}", :stdout => true
   end
