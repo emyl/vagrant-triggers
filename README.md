@@ -33,6 +33,10 @@ The first argument is the command in which the trigger will be tied. It could be
 * ```:force => true```: continue even if the script fails (exits with non-zero code)
 * ```:stdout => true```: display script output
 
+### Skipping execution
+
+Triggers won't run if ```VAGRANT_NO_TRIGGERS``` environment variable is set.
+
 ## Example
 
 In the following example a VirtualBox VM (not managed by Vagrant) will be tied to the machine defined in ```Vagrantfile```, to make so that it follows its lifecycle:
