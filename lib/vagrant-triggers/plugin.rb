@@ -23,8 +23,10 @@ module VagrantPlugins
 
       action_hook(:trigger, Plugin::ALL_ACTIONS) do |hook|
         require_relative "action"
-        hook.prepend(Action.action_trigger(:before))
-        hook.append(Action.action_trigger(:after))
+        unless ENV["VAGRANT_NO_TRIGGERS"]
+          hook.prepend(Action.action_trigger(:before))
+          hook.append(Action.action_trigger(:after))
+        end
       end
       
       config(:trigger) do
