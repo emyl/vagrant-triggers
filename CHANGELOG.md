@@ -1,5 +1,9 @@
 ## 0.2.0 (unreleased)
 
+NEW FEATURES:
+
+  - New option: ```:append_to_path```.
+
 IMPROVEMENTS:
 
   - Triggers won't run if ```VAGRANT_NO_TRIGGERS``` environment variable is set.

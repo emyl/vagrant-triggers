@@ -6,3 +6,7 @@ en:
         error output is shown below:
 
         %{stderr}
+      command_unavailable: |-
+        The executable "%{command}" Vagrant is trying to trigger
+        was not found. If you know it is not in the PATH, please
+        specify its absolute path using the :append_to_path option.
