@@ -1,3 +1,7 @@
+## 0.3.0 (October 27, 2013)
+
+  - New option: ```:target```. Defaults to "host".
+
 ## 0.2.0 (October 19, 2013)
 
 NEW FEATURES:
