@@ -12,6 +12,10 @@ module VagrantPlugins
       class CommandUnavailable < VagrantTriggerError
         error_key(:command_unavailable)
       end
+
+      class TargetUnavailable < VagrantTriggerError
+        error_key(:target_unavailable)
+      end
     end
   end
 end
