@@ -20,6 +20,31 @@ module VagrantPlugins
           @app.call(env)
         end
 
+        def command_exited(result)
+          if result.exit_code != 0 && !@options[:force]
+            raise Errors::CommandFailed, :command => raw_command, :stderr => result.stderr
+          end
+          if @options[:stdout] == nil || @options[:stdout]
+            @env[:ui].info "Command output:\n\n#{result.stdout}\n"
+          end
+        end
+
+        def execute_guest(raw_command)
+          @env[:ui].info 'Executing command "' + raw_command + '" on guest machine...'
+
+          stdout = stderr = ""
+          exit_code = @env[:machine].communicate.execute(raw_command) do |type, data|
+            if type == :stdout
+              stdout << data
+            elsif type == :stderr
+              stderr << data
+            end
+          end
+
+          result = Vagrant::Util::Subprocess::Result.new(exit_code, stdout, stderr)
+          command_exited(result)
+        end
+
         def execute(raw_command)
           @env[:ui].info 'Executing command "' + raw_command + '"...'
           command     = Shellwords.shellsplit(raw_command)
@@ -43,12 +68,7 @@ module VagrantPlugins
           ensure
             ENV.replace(env_backup)
           end
-          if result.exit_code != 0 && !@options[:force]
-            raise Errors::CommandFailed, :command => raw_command, :stderr => result.stderr
-          end
-          if @options[:stdout]
-            @env[:ui].info "Command output:\n\n#{result.stdout}\n"
-          end
+          command_exited(result)
         end
 
         def fire_triggers
@@ -61,16 +81,28 @@ module VagrantPlugins
           triggers_to_fire = @env[:machine].config.trigger.triggers.find_all { |t| t[:action] == current_action && t[:condition] == @condition }
           unless triggers_to_fire.empty?
             @env[:ui].info "Running triggers #{@condition} action..."
+
             triggers_to_fire.each do |trigger|
               @options = trigger[:options]
+
+              if @options[:target] == "guest"
+                method = "execute_guest"
+              elsif !@options[:target] || @options[:target] == "host"
+                method = "execute"
+              else
+                raise Errors::TargetUnavailable, :target => @options[:target]
+              end
+
               if @options[:execute]
-                execute(@options[:execute])
+                send(method, @options[:execute])
               else
                 @logger.debug("Trigger command not found.")
-              end
-            end
-          end
-        end
+              end # if @options[:execute]
+            end # triggers_to_fire.each do
+
+          end #unless
+        end # fire_triggers
+
       end
     end
   end
