@@ -69,3 +69,7 @@ To run the plugin's tests:
     $ bundle exec rake
 
 You can now fork this repository, make your changes and send a pull request.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/emyl/vagrant-triggers/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
