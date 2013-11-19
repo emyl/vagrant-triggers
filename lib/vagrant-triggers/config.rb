@@ -29,7 +29,7 @@ module VagrantPlugins
 
       def add_trigger(actions, condition, options)
         Array(actions).each do |action|
-          @triggers << { :action => action, :condition => :before, :options => options }
+          @triggers << { :action => action, :condition => condition, :options => options }
         end
       end
     end

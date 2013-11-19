@@ -1,3 +1,9 @@
+## 0.2.1 (November 19, 2013)
+
+BUG FIXES:
+
+  - Fixed regression in configuration [(#2)](https://github.com/emyl/vagrant-triggers/issues/2)
+
 ## 0.2.0 (October 19, 2013)
 
 NEW FEATURES:
