@@ -14,6 +14,18 @@ describe VagrantPlugins::Triggers::Config do
     its("triggers") { should eq [] }
   end
 
+  describe "add triggers" do
+    it "should add before triggers" do
+      config.before :up, :exec => "echo ls"
+      expect(config.triggers.first).to eq({ :action => :up, :condition => :before, :options => { :exec => "echo ls" } })
+    end
+
+    it "should add after triggers" do
+      config.after :up, :exec => "echo ls"
+      expect(config.triggers.first).to eq({ :action => :up, :condition => :after, :options => { :exec => "echo ls" } })
+    end
+  end
+
   describe "accept multiple entries" do
     it "should record multiple entries" do
       config.before :up, :exec => "echo ls"
