@@ -80,6 +80,13 @@ describe VagrantPlugins::Triggers::Action::Trigger do
       result.stub(:exit_code => 1)
       expect { described_class.new(app, env, condition).call(env) }.not_to raise_error()
     end
+
+    it "should display output if :stdout option was specified" do
+      @triggers[0][:options][:stdout] = true
+      result.stub(:stdout => "Some output")
+      ui.should_receive(:info).with("Command output:\n\nSome output\n")
+      described_class.new(app, env, condition).call(env)
+    end
   end
 
   context "with a command not in the PATH" do
