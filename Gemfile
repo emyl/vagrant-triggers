@@ -3,5 +3,5 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem "vagrant", :git => "git://github.com/mitchellh/vagrant.git"
+  gem "vagrant", :github => "mitchellh/vagrant", :tag => "v1.4.3"
 end
