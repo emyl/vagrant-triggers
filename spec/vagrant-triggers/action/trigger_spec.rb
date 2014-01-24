@@ -1,6 +1,4 @@
 require "spec_helper"
-require "vagrant/util/platform"
-require "vagrant/util/subprocess"
 
 describe VagrantPlugins::Triggers::Action::Trigger do
   let(:app)            { lambda { |env| } }
