@@ -4,6 +4,8 @@
 pkg/*
 Gemfile.lock
 
+coverage
+
 .rspec
 
 .vagrant
