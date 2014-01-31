@@ -1,5 +1,7 @@
 # vagrant-triggers
 
+[![Build Status](https://travis-ci.org/emyl/vagrant-triggers.png?branch=master)](https://travis-ci.org/emyl/vagrant-triggers)
+
 Allow the definition of arbitrary scripts that will run on the host before and/or after Vagrant commands.
 
 ## Installation
