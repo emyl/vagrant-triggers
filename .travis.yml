@@ -1,0 +1,13 @@
+language: ruby
+rvm:
+  - 1.9.3
+env:
+  - VAGRANT_VERSION=v1.4.3
+matrix:
+  include:
+    - env: VAGRANT_VERSION=v1.3.5
+      rvm: 1.9.3
+    - env: VAGRANT_VERSION=v1.2.7
+      rvm: 1.9.3
+    - env: VAGRANT_VERSION=v1.1.5
+      rvm: 1.8.7
