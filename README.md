@@ -4,10 +4,10 @@ Allow the definition of arbitrary scripts that will run on the host before and/o
 
 ## Installation
 
-Ensure you have downloaded and installed Vagrant from the
+Ensure you have downloaded and installed Vagrant 1.2+ from the
 [Vagrant downloads page](http://downloads.vagrantup.com/).
 
-Installation is performed in the prescribed manner for Vagrant 1.1+ plugins.
+Installation is performed in the prescribed manner for Vagrant plugins:
 
     $ vagrant plugin install vagrant-triggers
 
@@ -53,7 +53,7 @@ Vagrant.configure("2") do |config|
   }.each do |command, trigger|
     config.trigger.before command, :execute => "vboxmanage #{trigger}", :stdout => true
   end
-  
+
 end
 ```
 

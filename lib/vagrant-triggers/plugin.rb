@@ -1,6 +1,6 @@
 # This is a sanity check to make sure no one is attempting to install
 # this into an early Vagrant version.
-if Vagrant::VERSION < "1.1.0"
+if Vagrant::VERSION < "1.2.0"
   raise "The Vagrant Triggers plugin is only compatible with Vagrant 1.1+"
 end
 
@@ -22,7 +22,7 @@ module VagrantPlugins
           hook.append(Action.action_trigger(:after))
         end
       end
-      
+
       config(:trigger) do
         require_relative "config"
         Config
