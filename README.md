@@ -35,6 +35,7 @@ The first argument is the command in which the trigger will be tied. It could be
 * ```:append_to_path => ["dir", "dir"]```: additional places where looking for the script. See [this wiki page](https://github.com/emyl/vagrant-triggers/wiki/The-:append_to_path-option) for details.
 * ```:force => true```: continue even if the script fails (exits with non-zero code)
 * ```:stdout => true```: display script output
+* ```:info => "string"```: optional: an informational message to be displayed, instead of executing a command. This is only displayed if :execute is not set..
 
 ### Skipping execution
 

@@ -65,6 +65,8 @@ module VagrantPlugins
               @options = trigger[:options]
               if @options[:execute]
                 execute(@options[:execute])
+              elsif @options[:info]
+                @env[:ui].info @options[:info]
               else
                 @logger.debug("Trigger command not found.")
               end
