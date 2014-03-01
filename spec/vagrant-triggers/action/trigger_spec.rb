@@ -124,18 +124,19 @@ describe VagrantPlugins::Triggers::Action::Trigger do
 
   context "within the Vagrant environment" do
     before do
-      @original_path      = ENV["PATH"]
-      ENV["EMBEDDED_DIR"] = Vagrant::Util::Platform.windows? ? ENV["USERPROFILE"] : ENV["HOME"]
-      ENV["GEM_HOME"]     = "#{ENV["EMBEDDED_DIR"]}/gems"
-      ENV["GEM_PATH"]     = ENV["GEM_HOME"]
-      ENV["GEMRC"]        = "#{ENV["EMBEDDED_DIR"]}/etc/gemrc"
-      ENV["PATH"]         = "#{ENV["EMBEDDED_DIR"]}/bin:#{ENV["PATH"]}"
+      @original_path                        = ENV["PATH"]
+      ENV["VAGRANT_INSTALLER_ENV"]          = "1"
+      ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"] = Vagrant::Util::Platform.windows? ? ENV["USERPROFILE"] : ENV["HOME"]
+      ENV["GEM_HOME"]                       = "#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}/gems"
+      ENV["GEM_PATH"]                       = ENV["GEM_HOME"]
+      ENV["GEMRC"]                          = "#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}/etc/gemrc"
+      ENV["PATH"]                           = "#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}/bin:#{ENV["PATH"]}"
     end
 
     context "with a command which is present into the Vagrant embedded dir" do
       before do
-        Dir.mkdir("#{ENV["EMBEDDED_DIR"]}/bin")
-        File.open("#{ENV["EMBEDDED_DIR"]}/bin/foo", "w+", 0700) { |file| }
+        Dir.mkdir("#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}/bin")
+        File.open("#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}/bin/foo", "w+", 0700) { |file| }
       end
 
       it "should raise a CommandUnavailable error" do
@@ -143,7 +144,7 @@ describe VagrantPlugins::Triggers::Action::Trigger do
       end
 
       after do
-        FileUtils.rm_rf("#{ENV["EMBEDDED_DIR"]}/bin")
+        FileUtils.rm_rf("#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}/bin")
       end
     end
 
