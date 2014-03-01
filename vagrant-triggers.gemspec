@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.email         = "emiticci@gmail.com"
   spec.summary       = "Triggers for Vagrant commands."
   spec.description   = "This plugin allow the definition of arbitrary scripts that will run on the host before and/or after Vagrant commands."
-  
+
   # The following block of code determines the files that should be included
   # in the gem. It does this by reading all the files in the directory where
   # this gemspec is, and parsing out the ignored files from the gitignore.
@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
   root_path      = File.dirname(__FILE__)
   all_files      = Dir.chdir(root_path) { Dir.glob("**/{*,.*}") }
   all_files.reject! { |file| [".", ".."].include?(File.basename(file)) }
+  all_files.reject! { |file| file.start_with?("coverage/") }
   gitignore_path = File.join(root_path, ".gitignore")
   gitignore      = File.readlines(gitignore_path)
   gitignore.map!    { |line| line.chomp.strip }
