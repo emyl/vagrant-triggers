@@ -1,3 +1,9 @@
+## 0.2.2 (unreleased)
+
+NEW FEATURES:
+
+  - Add ```:info``` as an alternative to ```:execute```.
+
 ## 0.2.1 (November 19, 2013)
 
 BUG FIXES:
