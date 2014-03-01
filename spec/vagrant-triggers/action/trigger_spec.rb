@@ -1,3 +1,4 @@
+require "fileutils"
 require "spec_helper"
 
 describe VagrantPlugins::Triggers::Action::Trigger do
@@ -118,6 +119,64 @@ describe VagrantPlugins::Triggers::Action::Trigger do
     it "should accept an array for the :append_to_path option" do
       @triggers[0][:options][:append_to_path] = [@tmp_dir, @tmp_dir]
       expect { described_class.new(app, env, condition).call(env) }.not_to raise_error()
+    end
+  end
+
+  context "within the Vagrant environment" do
+    before do
+      @original_path      = ENV["PATH"]
+      ENV["EMBEDDED_DIR"] = Vagrant::Util::Platform.windows? ? ENV["USERPROFILE"] : ENV["HOME"]
+      ENV["GEM_HOME"]     = "#{ENV["EMBEDDED_DIR"]}/gems"
+      ENV["GEM_PATH"]     = ENV["GEM_HOME"]
+      ENV["GEMRC"]        = "#{ENV["EMBEDDED_DIR"]}/etc/gemrc"
+      ENV["PATH"]         = "#{ENV["EMBEDDED_DIR"]}/bin:#{ENV["PATH"]}"
+    end
+
+    context "with a command which is present into the Vagrant embedded dir" do
+      before do
+        Dir.mkdir("#{ENV["EMBEDDED_DIR"]}/bin")
+        File.open("#{ENV["EMBEDDED_DIR"]}/bin/foo", "w+", 0700) { |file| }
+      end
+
+      it "should raise a CommandUnavailable error" do
+        expect { described_class.new(app, env, condition).call(env) }.to raise_error(VagrantPlugins::Triggers::Errors::CommandUnavailable)
+      end
+
+      after do
+        FileUtils.rm_rf("#{ENV["EMBEDDED_DIR"]}/bin")
+      end
+    end
+
+    it "should not pass GEM_HOME to the executed command" do
+      Vagrant::Util::Subprocess.should_receive(:execute) do |command|
+        expect(ENV).not_to have_key("GEM_HOME")
+        result
+      end
+      described_class.new(app, env, condition).call(env)
+    end
+
+    it "should not pass GEM_PATH to the executed command" do
+      Vagrant::Util::Subprocess.should_receive(:execute) do |command|
+        expect(ENV).not_to have_key("GEM_PATH")
+        result
+      end
+      described_class.new(app, env, condition).call(env)
+    end
+
+    it "should not pass GEMRC to the executed command" do
+      Vagrant::Util::Subprocess.should_receive(:execute) do |command|
+        expect(ENV).not_to have_key("GEMRC")
+        result
+      end
+      described_class.new(app, env, condition).call(env)
+    end
+
+    after do
+      ENV["EMBEDDED_DIR"] = nil
+      ENV["GEM_HOME"]     = nil
+      ENV["GEM_PATH"]     = nil
+      ENV["GEMRC"]        = nil
+      ENV["PATH"]         = @original_path
     end
   end
 end

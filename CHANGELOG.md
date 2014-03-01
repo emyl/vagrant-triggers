@@ -4,6 +4,10 @@ NEW FEATURES:
 
   - Add ```:info``` as an alternative to ```:execute```.
 
+BUG FIXES:
+
+  - Remove Vagrant specific environment variables when executing commands [(#5)](https://github.com/emyl/vagrant-triggers/issues/2)
+
 ## 0.2.1 (November 19, 2013)
 
 BUG FIXES:

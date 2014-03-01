@@ -15,9 +15,26 @@ module VagrantPlugins
 
         def call(env)
           fire_triggers
-          
+
           # Carry on
           @app.call(env)
+        end
+
+        private
+
+        def build_environment
+          @logger.debug("Original environment: #{ENV.inspect}")
+
+          # Remove GEM_ environment variables
+          ["GEM_HOME", "GEM_PATH", "GEMRC"].each { |gem_var| ENV.delete(gem_var) }
+
+          # Create the new PATH removing Vagrant bin directory
+          # and appending directories specified through the
+          # :append_to_path option
+          new_path  = ENV["VAGRANT_INSTALLER_ENV"] ? ENV["PATH"].gsub(/#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}.*?#{File::PATH_SEPARATOR}/, "") : ENV["PATH"]
+          new_path += Array(@options[:append_to_path]).map { |dir| "#{File::PATH_SEPARATOR}#{dir}" }.join
+          ENV["PATH"] = new_path
+          @logger.debug("PATH modifed: #{ENV["PATH"]}")
         end
 
         def execute(raw_command)
@@ -25,20 +42,9 @@ module VagrantPlugins
           command     = Shellwords.shellsplit(raw_command)
           env_backup  = ENV.to_hash
           begin
+            build_environment
             result = Vagrant::Util::Subprocess.execute(command[0], *command[1..-1])
           rescue Vagrant::Errors::CommandUnavailable, Vagrant::Errors::CommandUnavailableWindows
-            @logger.debug("Command not found in the path.")
-            @logger.debug("Current PATH: #{ENV["PATH"]}")
-            new_path = Array(@options[:append_to_path]).join(File::PATH_SEPARATOR)
-            @logger.debug("Temporary replacing the system PATH with #{new_path}.")
-            unless new_path.empty?
-              new_env = env_backup.dup
-              new_env.delete("PATH")
-              new_env["PATH"] = new_path
-              ENV.replace(new_env)
-              @options[:append_to_path] = nil
-              retry
-            end
             raise Errors::CommandUnavailable, :command => command[0]
           ensure
             ENV.replace(env_backup)
