@@ -7,12 +7,12 @@ module VagrantPlugins
         @triggers = []
       end
 
-      def after(actions, options = {})
-        add_trigger(actions, :after, options)
+      def after(actions, options = {}, &block)
+        add_trigger(actions, :after, options, block)
       end
 
-      def before(actions, options = {})
-        add_trigger(actions, :before, options)
+      def before(actions, options = {}, &block)
+        add_trigger(actions, :before, options, block)
       end      
 
       def validate(machine)
@@ -27,8 +27,9 @@ module VagrantPlugins
 
       private
 
-      def add_trigger(actions, condition, options)
+      def add_trigger(actions, condition, options, block)
         Array(actions).each do |action|
+          options[:call] = block
           @triggers << { :action => action, :condition => condition, :options => options }
         end
       end
