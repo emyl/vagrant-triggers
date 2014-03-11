@@ -29,7 +29,7 @@ module VagrantPlugins
 
       def add_trigger(actions, condition, options, block)
         Array(actions).each do |action|
-          options[:call] = block
+          options[:call] = block if not block.nil?
           @triggers << { :action => action, :condition => condition, :options => options }
         end
       end
