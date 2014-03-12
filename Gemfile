@@ -8,7 +8,7 @@ gemspec
 dependencies.find { |dep| dep.name == "vagrant-triggers" }.instance_variable_set(:@groups, [:default, :plugins])
 
 group :development do
-  gem "vagrant", :github => "mitchellh/vagrant", :ref => ENV.fetch("VAGRANT_VERSION", "v1.4.3")
+  gem "vagrant", :github => "mitchellh/vagrant", :ref => ENV.fetch("VAGRANT_VERSION", "master")
 end
 
 group :test do
