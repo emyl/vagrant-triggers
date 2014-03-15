@@ -32,6 +32,9 @@ The first argument is the command in which the trigger will be tied. It could be
 ### Options
 
 * ```:execute => "script"```: the script to execute
+* ```:call => proc```: a Proc object. When called, Vagrant's env object will be passed to the proc/block as the first argument.
+                       This option also takes precedence over :execute if specified.
+                       Alternatively, this option can also be passed as a block, which will overwrite this option, to the trigger.
 * ```:info => "string"```: an informational message to be displayed, instead of executing a command. This is only displayed if :execute is not set.
 
 * ```:append_to_path => ["dir", "dir"]```: additional places where looking for the script. See [this wiki page](https://github.com/emyl/vagrant-triggers/wiki/The-:append_to_path-option) for details.
@@ -58,6 +61,18 @@ Vagrant.configure("2") do |config|
     config.trigger.before command, :execute => "vboxmanage #{trigger}", :stdout => true
   end
 
+end
+```
+
+
+```ruby
+
+Vagrant.configure("2") do |config|
+
+  config.trigger.before :up do |env|
+    yn = env[:ui].ask("Would you like to recreate DB volume? [y/N] ")
+    # ... do something about the answer ...
+  end
 end
 ```
 

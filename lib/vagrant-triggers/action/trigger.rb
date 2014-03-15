@@ -69,7 +69,9 @@ module VagrantPlugins
             @env[:ui].info "Running triggers #{@condition} action..."
             triggers_to_fire.each do |trigger|
               @options = trigger[:options]
-              if @options[:execute]
+              if @options[:call]
+                @options[:call].call(@env)
+              elsif @options[:execute]
                 execute(@options[:execute])
               elsif @options[:info]
                 @env[:ui].info @options[:info]
