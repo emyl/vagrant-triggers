@@ -1,4 +1,10 @@
-## 0.2.2 (unreleased)
+## 0.3.0 (unreleased)
+
+BUG FIXES:
+
+  - Avoid loops by adding VAGRANT_NO_TRIGGERS to the subprocess shell
+
+## 0.2.2 (March 1, 2014)
 
 NEW FEATURES:
 
@@ -6,7 +12,7 @@ NEW FEATURES:
 
 BUG FIXES:
 
-  - Remove Vagrant specific environment variables when executing commands [(#5)](https://github.com/emyl/vagrant-triggers/issues/2)
+  - Remove Vagrant specific environment variables when executing commands [(#5)](https://github.com/emyl/vagrant-triggers/issues/5)
 
 ## 0.2.1 (November 19, 2013)
 
