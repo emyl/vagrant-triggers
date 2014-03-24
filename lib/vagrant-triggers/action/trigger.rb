@@ -35,6 +35,9 @@ module VagrantPlugins
           new_path += Array(@options[:append_to_path]).map { |dir| "#{File::PATH_SEPARATOR}#{dir}" }.join
           ENV["PATH"] = new_path
           @logger.debug("PATH modifed: #{ENV["PATH"]}")
+
+          # Add the VAGRANT_NO_TRIGGERS variable to avoid loops
+          ENV["VAGRANT_NO_TRIGGERS"] = "1"
         end
 
         def execute(raw_command)

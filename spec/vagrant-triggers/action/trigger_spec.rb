@@ -86,6 +86,14 @@ describe VagrantPlugins::Triggers::Action::Trigger do
       ui.should_receive(:info).with("Command output:\n\nSome output\n")
       described_class.new(app, env, condition).call(env)
     end
+
+    it "should pass VAGRANT_NO_TRIGGERS environment variable to the command" do
+      Vagrant::Util::Subprocess.should_receive(:execute) do |command|
+        expect(ENV).to have_key("VAGRANT_NO_TRIGGERS")
+        result
+      end
+      described_class.new(app, env, condition).call(env)
+    end
   end
 
   context "with a command not in the PATH" do
