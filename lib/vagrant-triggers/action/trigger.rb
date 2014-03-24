@@ -41,7 +41,7 @@ module VagrantPlugins
         end
 
         def execute(raw_command)
-          @env[:ui].info 'Executing command "' + raw_command + '"...'
+          @env[:ui].info I18n.t("vagrant_triggers.action.trigger.executing_command", :command => raw_command)
           command     = Shellwords.shellsplit(raw_command)
           env_backup  = ENV.to_hash
           begin
@@ -56,7 +56,7 @@ module VagrantPlugins
             raise Errors::CommandFailed, :command => raw_command, :stderr => result.stderr
           end
           if @options[:stdout]
-            @env[:ui].info "Command output:\n\n#{result.stdout}\n"
+            @env[:ui].info I18n.t("vagrant_triggers.action.trigger.command_output", :output => result.stdout)
           end
         end
 
@@ -69,7 +69,7 @@ module VagrantPlugins
           @logger.debug("Looking for triggers #{@condition} action #{current_action}.")
           triggers_to_fire = @env[:machine].config.trigger.triggers.find_all { |t| t[:action] == current_action && t[:condition] == @condition }
           unless triggers_to_fire.empty?
-            @env[:ui].info "Running triggers #{@condition} action..."
+            @env[:ui].info I18n.t("vagrant_triggers.action.trigger.running_triggers", :condition => @condition)
             triggers_to_fire.each do |trigger|
               @options = trigger[:options]
               if @options[:execute]

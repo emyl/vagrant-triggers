@@ -1,5 +1,16 @@
 en:
   vagrant_triggers:
+    action:
+      trigger:
+        command_output: |-
+          Command output:
+          ---------------
+          %{output}
+          ---------------
+        executing_command: |-
+          Executing command "%{command}"...
+        running_triggers: |-
+          Running triggers %{condition} action...
     errors:
       command_failed: |-
         The command "%{command}" returned a failed exit code. The

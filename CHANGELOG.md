@@ -1,5 +1,9 @@
 ## 0.3.0 (unreleased)
 
+IMPROVEMENTS:
+
+  - Plugin messages are now localized
+
 BUG FIXES:
 
   - Avoid loops by adding VAGRANT_NO_TRIGGERS to the subprocess shell
