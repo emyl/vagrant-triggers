@@ -83,7 +83,7 @@ describe VagrantPlugins::Triggers::Action::Trigger do
     it "should display output if :stdout option was specified" do
       @triggers[0][:options][:stdout] = true
       result.stub(:stdout => "Some output")
-      ui.should_receive(:info).with("Command output:\n\nSome output\n")
+      ui.should_receive(:info).with(/Some output/)
       described_class.new(app, env, condition).call(env)
     end
 
