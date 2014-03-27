@@ -16,25 +16,25 @@ describe VagrantPlugins::Triggers::Config do
 
   describe "add triggers" do
     it "should add before triggers" do
-      config.before :up, :exec => "echo ls"
-      expect(config.triggers.first).to eq({ :action => :up, :condition => :before, :options => { :exec => "echo ls" } })
+      config.before(:up) { run "ls" }
+      expect(config.triggers).to have(1).item
     end
 
     it "should add after triggers" do
-      config.after :up, :exec => "echo ls"
-      expect(config.triggers.first).to eq({ :action => :up, :condition => :after, :options => { :exec => "echo ls" } })
+      config.after(:up) { run "ls" }
+      expect(config.triggers).to have(1).item
     end
   end
 
   describe "accept multiple entries" do
     it "should record multiple entries" do
-      config.before :up, :exec => "echo ls"
-      config.after :up, :exec => "echo ls"
+      config.before(:up) { run "ls" }
+      config.after(:up) { run "ls" }
       expect(config.triggers).to have(2).items
     end
 
     it "should record multiple entries if the action is an array" do
-      config.before [:up, :halt], :exec => "echo ls"
+      config.before([:up, :halt]) { run "ls" }
       expect(config.triggers).to have(2).items
     end
   end

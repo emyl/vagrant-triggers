@@ -31,13 +31,17 @@ module VagrantPlugins
           unless triggers_to_fire.empty?
             @env[:ui].info I18n.t("vagrant_triggers.action.trigger.running_triggers", :condition => @condition)
             triggers_to_fire.each do |trigger|
+              # Ugly block, will change in v0.4
               @options = trigger[:options]
-              dsl      = DSL.new(@env[:ui], @options)
-              if @options[:execute]
-                # execute(@options[:execute])
+              case
+              when trigger[:proc]
+                dsl = DSL.new(@env[:ui], @options)
+                dsl.instance_eval &trigger[:proc]
+              when @options[:execute]
+                dsl = DSL.new(@env[:ui], @options)
                 dsl.execute @options[:execute]
-              elsif @options[:info]
-                # @env[:ui].info @options[:info]
+              when @options[:info]
+                dsl = DSL.new(@env[:ui], @options)
                 dsl.info @options[:info]
               else
                 @logger.debug("Trigger command not found.")
