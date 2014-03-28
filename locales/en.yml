@@ -7,6 +7,16 @@ en:
           ---------------
           %{output}
           ---------------
+        deprecated_syntax: |-
+          --------------------
+          DEPRECATION WARNING:
+          --------------------
+          The `:execute` and `:info` trigger options are deprecated
+          and will be removed in vagrant-triggers 0.4. Please upgrade
+          your Vagrantfile according to the new trigger DSL.
+
+          More information on the project home page:
+          https://github.com/emyl/vagrant-triggers
         executing_command: |-
           Executing command "%{command}"...
         running_triggers: |-

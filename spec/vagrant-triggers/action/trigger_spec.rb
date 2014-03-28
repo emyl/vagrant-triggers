@@ -14,6 +14,7 @@ describe VagrantPlugins::Triggers::Action::Trigger do
   before do
     trigger_block = Proc.new { nil }
     @triggers     = [ { :action => machine_action, :condition => condition, :options => { }, :proc => trigger_block } ]
+    machine.stub_chain(:config, :trigger, :deprecation_warning)
     machine.stub_chain(:config, :trigger, :triggers).and_return(@triggers)
   end
 
@@ -60,6 +61,12 @@ describe VagrantPlugins::Triggers::Action::Trigger do
   it "shouldn't fire trigger when action doesn't match" do
     @triggers[0][:action] = "blah"
     VagrantPlugins::Triggers::DSL.should_not_receive(:new)
+    described_class.new(app, env, condition).call(env)
+  end
+
+  it "should emit a warning message if the deprecation warning flag is set" do
+    machine.stub_chain(:config, :trigger, :deprecation_warning).and_return(true)
+    ui.should_receive(:warn).with(/DEPRECATION WARNING/)
     described_class.new(app, env, condition).call(env)
   end
 end

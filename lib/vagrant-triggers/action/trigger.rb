@@ -29,6 +29,10 @@ module VagrantPlugins
           @logger.debug("Looking for triggers #{@condition} action #{current_action}.")
           triggers_to_fire = @env[:machine].config.trigger.triggers.find_all { |t| t[:action] == current_action && t[:condition] == @condition }
           unless triggers_to_fire.empty?
+            # Emit a warning message if the old syntax is found
+            if @env[:machine].config.trigger.deprecation_warning
+              @env[:ui].warn I18n.t("vagrant_triggers.action.trigger.deprecated_syntax")
+            end
             @env[:ui].info I18n.t("vagrant_triggers.action.trigger.running_triggers", :condition => @condition)
             triggers_to_fire.each do |trigger|
               # Ugly block, will change in v0.4

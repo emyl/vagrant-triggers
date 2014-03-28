@@ -1,10 +1,12 @@
 module VagrantPlugins
   module Triggers
     class Config < Vagrant.plugin("2", :config)
+      attr_reader :deprecation_warning
       attr_reader :triggers
 
       def initialize
-        @triggers = []
+        @deprecation_warning = false
+        @triggers            = []
       end
 
       def after(actions, options = {}, &block)
@@ -30,6 +32,7 @@ module VagrantPlugins
       def add_trigger(actions, condition, options, proc)
         Array(actions).each do |action|
           @triggers << { :action => action, :condition => condition, :options => options, :proc => proc }
+          @deprecation_warning = true if options[:execute] || options[:info]
         end
       end
     end
