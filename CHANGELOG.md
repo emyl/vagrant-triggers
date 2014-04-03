@@ -1,12 +1,20 @@
 ## 0.3.0 (unreleased)
 
+CHANGES:
+
+  - Implement a new DSL for running scripts.
+
+DEPRECATIONS:
+
+  - The ```:info``` and ```:execute``` options has been replaced by the new DSL.
+
 IMPROVEMENTS:
 
-  - Plugin messages are now localized
+  - Plugin messages are now localized.
 
 BUG FIXES:
 
-  - Avoid loops by adding VAGRANT_NO_TRIGGERS to the subprocess shell
+  - Avoid loops by adding VAGRANT_NO_TRIGGERS to the subprocess shell.
 
 ## 0.2.2 (March 1, 2014)
 
