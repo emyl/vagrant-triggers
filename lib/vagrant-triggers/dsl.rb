@@ -32,8 +32,13 @@ module VagrantPlugins
       end
       alias_method :execute, :run
 
-      def info(message)
-        @ui.info(message)
+      def method_missing(method, *args, &block)
+        # If the @ui object responds to the given method, call it
+        if @ui.respond_to?(method)
+          @ui.send(method, *args, *block)
+        else
+          super(method, *args, &block)
+        end
       end
 
       private

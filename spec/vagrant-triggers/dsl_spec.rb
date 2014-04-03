@@ -13,6 +13,13 @@ describe VagrantPlugins::Triggers::DSL do
     @dsl     = described_class.new(ui, {})
   end
 
+  context "method missing" do
+    it "acts as proxy if the ui object respond to the called method" do
+      ui.stub(:foo).and_return("bar")
+      expect(@dsl.foo).to eq("bar")
+    end
+  end
+
   context "run a regular command" do
     before do
       Vagrant::Util::Subprocess.stub(:execute => result)
