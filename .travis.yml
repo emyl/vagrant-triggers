@@ -2,7 +2,7 @@ language: ruby
 rvm:
   - 2.0.0
 env:
-  - VAGRANT_VERSION=v1.5.1
+  - VAGRANT_VERSION=v1.5.2
 matrix:
   include:
     - env: VAGRANT_VERSION=master
