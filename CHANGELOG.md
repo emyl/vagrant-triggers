@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.3.0 (April 4, 2014)
 
 CHANGES:
 
