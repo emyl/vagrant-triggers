@@ -17,32 +17,42 @@ Installation is performed in the prescribed manner for Vagrant plugins:
 
 ### Basic usage
 
-The following ```Vagrantfile``` configuration options are added:
+```ruby
+Vagrant.configure("2") do |config|
+  # Your existing Vagrant configuration
+  ...
 
-```
-trigger.before :command, { :option => "value", ... }
-```
+  config.trigger.before :command, :option => "value" do
+    run "script"
+    ...
+  end
 
-```
-trigger.after :command, { :option => "value", ... }
+  config.trigger.after :command, :option => "value" do
+    run "script"
+    ...
+  end
+end
 ```
 
 The first argument is the command in which the trigger will be tied. It could be an array (e.g. ```[:up, :resume]```) in case of multiple commands.
 
 ### Options
 
-* ```:execute => "script"```: the script to execute
-* ```:info => "string"```: an informational message to be displayed, instead of executing a command. This is only displayed if :execute is not set.
-
-* ```:append_to_path => ["dir", "dir"]```: additional places where looking for the script. See [this wiki page](https://github.com/emyl/vagrant-triggers/wiki/The-:append_to_path-option) for details.
-* ```:force => true```: continue even if the script fails (exits with non-zero code)
+* ```:append_to_path => ["dir", "dir"]```: additional places where looking for scripts. See [this wiki page](https://github.com/emyl/vagrant-triggers/wiki/The-:append_to_path-option) for details.
+* ```:force => true```: continue even one of the scripts fails (exits with non-zero code)
 * ```:stdout => true```: display script output
+
+### Trigger block DSL
+
+The given block will be evaluated by an instance of the [VagrantPlugins::Triggers::DSL](https://github.com/emyl/vagrant-triggers/blob/master/lib/vagrant-triggers/dsl.rb) class. This class defines a very simple DSL for running scripts on the host machine. Basically only one method (`run`) is directly defined, all the other calls will be forwarded to Vagrant's [ui](https://github.com/mitchellh/vagrant/blob/master/lib/vagrant/ui.rb) instance. This allows the definition of custom messages along with scripts.
+
+For additional details you can take a look to the [VagrantPlugins::Triggers::DSL](https://github.com/emyl/vagrant-triggers/blob/master/lib/vagrant-triggers/dsl.rb) definition.
 
 ### Skipping execution
 
 Triggers won't run if ```VAGRANT_NO_TRIGGERS``` environment variable is set.
 
-## Example
+## A more detailed example
 
 In the following example a VirtualBox VM (not managed by Vagrant) will be tied to the machine defined in ```Vagrantfile```, to make so that it follows its lifecycle:
 
@@ -55,11 +65,16 @@ Vagrant.configure("2") do |config|
     :suspend       => "controlvm 22aed8b3-d246-40d5-8ad4-176c17552c43 savestate",
     :halt          => "controlvm 22aed8b3-d246-40d5-8ad4-176c17552c43 acpipowerbutton",
   }.each do |command, trigger|
-    config.trigger.before command, :execute => "vboxmanage #{trigger}", :stdout => true
+    config.trigger.before command, :stdout => true do
+      info "Executing #{command} action on the VirtualBox tied VM..."
+      run  "vboxmanage #{trigger}"
+    end
   end
 
 end
 ```
+
+For additional examples, see the [trigger recipes](https://github.com/emyl/vagrant-triggers/wiki/Trigger-recipes) wiki page.
 
 ## Contributing
 
@@ -76,4 +91,3 @@ You can now fork this repository, make your changes and send a pull request.
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/emyl/vagrant-triggers/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
