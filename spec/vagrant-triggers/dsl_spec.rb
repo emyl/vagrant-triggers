@@ -11,6 +11,8 @@ describe VagrantPlugins::Triggers::DSL do
   before do
     @command = "foo"
     @dsl     = described_class.new(ui, {})
+
+    result.stub(:stdout => "Some output")
   end
 
   context "method missing" do
@@ -38,7 +40,6 @@ describe VagrantPlugins::Triggers::DSL do
 
     it "should display output if :stdout option was specified" do
       dsl = described_class.new(ui, :stdout => true)
-      result.stub(:stdout => "Some output")
       ui.should_receive(:info).with(/Some output/)
       dsl.run(@command)
     end

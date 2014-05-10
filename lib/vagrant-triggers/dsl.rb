@@ -12,7 +12,7 @@ module VagrantPlugins
       end
 
       def run(raw_command, options = {})
-        @ui.info I18n.t("vagrant_triggers.action.trigger.executing_command", :command => raw_command)
+        info I18n.t("vagrant_triggers.action.trigger.executing_command", :command => raw_command)
         command     = Shellwords.shellsplit(raw_command)
         env_backup  = ENV.to_hash
         begin
@@ -27,8 +27,9 @@ module VagrantPlugins
           raise Errors::CommandFailed, :command => raw_command, :stderr => result.stderr
         end
         if @options[:stdout]
-          @ui.info I18n.t("vagrant_triggers.action.trigger.command_output", :output => result.stdout)
+          info I18n.t("vagrant_triggers.action.trigger.command_output", :output => result.stdout)
         end
+        result.stdout
       end
       alias_method :execute, :run
 

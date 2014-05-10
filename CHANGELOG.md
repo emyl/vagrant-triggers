@@ -1,3 +1,9 @@
+## 0.4.0 (Unreleased)
+
+IMPROVEMENTS:
+
+  - Ensure the `run` statement always returns the command output.
+
 ## 0.3.0 (April 4, 2014)
 
 CHANGES:
