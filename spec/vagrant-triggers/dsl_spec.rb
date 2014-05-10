@@ -15,6 +15,13 @@ describe VagrantPlugins::Triggers::DSL do
     result.stub(:stdout => "Some output")
   end
 
+  context "error" do
+    it "should raise a DSL error on UI error" do
+      ui.should_receive(:error).with("Error message")
+      expect { @dsl.error("Error message") }.to raise_error(VagrantPlugins::Triggers::Errors::DSLError)
+    end
+  end
+
   context "method missing" do
     it "acts as proxy if the ui object respond to the called method" do
       ui.stub(:foo).and_return("bar")

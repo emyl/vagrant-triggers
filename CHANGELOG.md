@@ -2,6 +2,7 @@
 
 IMPROVEMENTS:
 
+  - DSL: the `error` statement now stops the action and makes Vagrant fail with an error.
   - Ensure the `run` statement always returns the command output.
 
 ## 0.3.0 (April 4, 2014)

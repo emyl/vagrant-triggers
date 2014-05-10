@@ -11,6 +11,10 @@ module VagrantPlugins
         @ui      = ui
       end
 
+      def error(message, *opts)
+        raise Errors::DSLError, @ui.error(message, *opts)
+      end
+
       def run(raw_command, options = {})
         info I18n.t("vagrant_triggers.action.trigger.executing_command", :command => raw_command)
         command     = Shellwords.shellsplit(raw_command)

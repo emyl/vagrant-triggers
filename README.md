@@ -44,7 +44,7 @@ The first argument is the command in which the trigger will be tied. It could be
 
 ### Trigger block DSL
 
-The given block will be evaluated by an instance of the [VagrantPlugins::Triggers::DSL](https://github.com/emyl/vagrant-triggers/blob/master/lib/vagrant-triggers/dsl.rb) class. This class defines a very simple DSL for running scripts on the host machine. Basically only one method (`run`) is directly defined, all the other calls will be forwarded to Vagrant's [ui](https://github.com/mitchellh/vagrant/blob/master/lib/vagrant/ui.rb) instance. This allows the definition of custom messages along with scripts.
+The given block will be evaluated by an instance of the [VagrantPlugins::Triggers::DSL](https://github.com/emyl/vagrant-triggers/blob/master/lib/vagrant-triggers/dsl.rb) class. This class defines a very simple DSL for running scripts on the host machine. Only a few methods are directly defined, all the other calls will be forwarded to Vagrant's [ui](https://github.com/mitchellh/vagrant/blob/master/lib/vagrant/ui.rb) instance. This allows the definition of custom messages along with scripts.
 
 For additional details you can take a look to the [VagrantPlugins::Triggers::DSL](https://github.com/emyl/vagrant-triggers/blob/master/lib/vagrant-triggers/dsl.rb) definition.
 

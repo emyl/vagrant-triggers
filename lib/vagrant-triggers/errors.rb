@@ -12,6 +12,10 @@ module VagrantPlugins
       class CommandUnavailable < VagrantTriggerError
         error_key(:command_unavailable)
       end
+
+      class DSLError < VagrantTriggerError
+        error_key(:dsl_error)
+      end
     end
   end
 end
