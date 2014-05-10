@@ -6,8 +6,10 @@ Gem::Specification.new do |spec|
   spec.version       = VagrantPlugins::Triggers::VERSION
   spec.authors       = "Emiliano Ticci"
   spec.email         = "emiticci@gmail.com"
+  spec.homepage      = "https://github.com/emyl/vagrant-triggers"
   spec.summary       = "Triggers for Vagrant commands."
   spec.description   = "This plugin allow the definition of arbitrary scripts that will run on the host before and/or after Vagrant commands."
+  spec.license       = "MIT"
 
   # The following block of code determines the files that should be included
   # in the gem. It does this by reading all the files in the directory where
