@@ -4,6 +4,15 @@ if Vagrant::VERSION < "1.2.0"
   raise "The Vagrant Triggers plugin is only compatible with Vagrant 1.2+"
 end
 
+if ["1.6.0", "1.6.1"].include?(Vagrant::VERSION)
+  warn <<-WARNING.gsub /^\s{2}/, ""
+  The Vagrant version you're using contains a bug that prevents some
+  triggers to work as expected. Update to version 1.6.2+ if you
+  want to avoid issues.
+
+  WARNING
+end
+
 module VagrantPlugins
   module Triggers
     class Plugin < Vagrant.plugin("2")
