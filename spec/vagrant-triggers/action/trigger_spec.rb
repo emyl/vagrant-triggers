@@ -63,10 +63,4 @@ describe VagrantPlugins::Triggers::Action::Trigger do
     VagrantPlugins::Triggers::DSL.should_not_receive(:new)
     described_class.new(app, env, condition).call(env)
   end
-
-  it "should emit a warning message if the deprecation warning flag is set" do
-    machine.stub_chain(:config, :trigger, :deprecation_warning).and_return(true)
-    ui.should_receive(:warn).with(/DEPRECATION WARNING/)
-    described_class.new(app, env, condition).call(env)
-  end
 end

@@ -29,26 +29,13 @@ module VagrantPlugins
           @logger.debug("Looking for triggers #{@condition} action #{current_action}.")
           triggers_to_fire = @env[:machine].config.trigger.triggers.find_all { |t| t[:action] == current_action && t[:condition] == @condition }
           unless triggers_to_fire.empty?
-            # Emit a warning message if the old syntax is found
-            if @env[:machine].config.trigger.deprecation_warning
-              @env[:ui].warn I18n.t("vagrant_triggers.action.trigger.deprecated_syntax")
-            end
             @env[:ui].info I18n.t("vagrant_triggers.action.trigger.running_triggers", :condition => @condition)
             triggers_to_fire.each do |trigger|
-              # Ugly block, will change in v0.4
-              @options = trigger[:options]
-              case
-              when trigger[:proc]
-                dsl = DSL.new(@env[:ui], @options)
+              if trigger[:proc]
+                dsl = DSL.new(@env[:ui], trigger[:options])
                 dsl.instance_eval &trigger[:proc]
-              when @options[:execute]
-                dsl = DSL.new(@env[:ui], @options)
-                dsl.execute @options[:execute]
-              when @options[:info]
-                dsl = DSL.new(@env[:ui], @options)
-                dsl.info @options[:info]
               else
-                @logger.debug("Trigger command not found.")
+                  @logger.debug("Trigger command not found.")
               end
             end
           end
