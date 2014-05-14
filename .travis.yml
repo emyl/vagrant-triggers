@@ -1,8 +1,12 @@
 language: ruby
 rvm:
   - 2.0.0
+before_install:
+  - gem update --system
+  - rvm @default,@global do gem uninstall -ax bundler
+  - gem install bundler -v 1.5.3
 env:
-  - VAGRANT_VERSION=v1.6.1
+  - VAGRANT_VERSION=v1.6.2
 matrix:
   include:
     - env: VAGRANT_VERSION=master
