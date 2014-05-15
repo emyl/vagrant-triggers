@@ -24,13 +24,6 @@ describe VagrantPlugins::Triggers::Config do
       config.after(:up) { run "ls" }
       expect(config.triggers).to have(1).item
     end
-
-    [:execute, :info].each do |option|
-      it "should set the deprecation warning flag if the old #{option.to_s} option is passed" do
-        config.before(:up, option => true)
-        expect(config.deprecation_warning).to be_true
-      end
-    end
   end
 
   describe "accept multiple entries" do

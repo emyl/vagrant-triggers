@@ -14,7 +14,6 @@ describe VagrantPlugins::Triggers::Action::Trigger do
   before do
     trigger_block = Proc.new { nil }
     @triggers     = [ { :action => machine_action, :condition => condition, :options => { }, :proc => trigger_block } ]
-    machine.stub_chain(:config, :trigger, :deprecation_warning)
     machine.stub_chain(:config, :trigger, :triggers).and_return(@triggers)
   end
 
