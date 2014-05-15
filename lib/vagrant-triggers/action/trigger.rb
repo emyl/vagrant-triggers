@@ -22,24 +22,44 @@ module VagrantPlugins
 
         def fire_triggers
           # Triggers don't fire on environment load and unload.
-          return if [:environment_load, :environment_unload].include?(@env[:action_name])
-          current_action = @env[:machine_action]
+          return if [:environment_load, :environment_plugins_loaded, :environment_unload].include?(@env[:action_name])
+
           # Also don't fire if machine action is not defined.
-          return unless current_action
-          @logger.debug("Looking for triggers for condition => #{@condition} and action => #{current_action}.")
-          triggers_to_fire = @env[:machine].config.trigger.triggers.find_all { |t| t[:action] == current_action && t[:condition] == @condition }
-          unless triggers_to_fire.empty?
-            @env[:ui].info I18n.t("vagrant_triggers.action.trigger.running_triggers", :action => current_action, :condition => @condition.to_s.gsub('_', ' '))
-            triggers_to_fire.each do |trigger|
-              if trigger[:proc]
-                dsl = DSL.new(@env[:ui], trigger[:options])
-                dsl.instance_eval &trigger[:proc]
-              else
-                  @logger.debug("Trigger command not found.")
-              end
+          return unless @env[:machine_action]
+
+          @logger.debug("Looking for triggers with:")
+          trigger_env.each { |k, v| @logger.debug("-- #{k}: #{v}")}
+
+          # Loop through all defined triggers checking for matches.
+          triggers_to_fire = [].tap do |triggers|
+            @env[:machine].config.trigger.triggers.each do |trigger|
+              next if trigger[:action]    != trigger_env[:action]
+              next if trigger[:condition] != trigger_env[:condition]
+
+              triggers << trigger
             end
-            @exit = true if @condition == :instead_of
           end
+
+          unless triggers_to_fire.empty?
+            @env[:ui].info I18n.t("vagrant_triggers.action.trigger.running_triggers", trigger_env).gsub('_', ' ')
+            @exit = true if trigger_env[:condition] == :instead_of
+          end
+
+          triggers_to_fire.each do |trigger|
+            if trigger[:proc]
+              dsl = DSL.new(@env[:ui], trigger[:options])
+              dsl.instance_eval &trigger[:proc]
+            else
+              @logger.debug("Trigger command not found.")
+            end
+          end
+        end
+
+        def trigger_env
+          {
+            :action    => @env[:machine_action],
+            :condition => @condition
+          }
         end
       end
     end
