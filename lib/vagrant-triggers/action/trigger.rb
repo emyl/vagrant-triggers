@@ -23,13 +23,13 @@ module VagrantPlugins
         def fire_triggers
           # Triggers don't fire on environment load and unload.
           return if [:environment_load, :environment_unload].include?(@env[:action_name])
-          current_action   = @env[:machine_action]
+          current_action = @env[:machine_action]
           # Also don't fire if machine action is not defined.
           return unless current_action
-          @logger.debug("Looking for triggers #{@condition} action #{current_action}.")
+          @logger.debug("Looking for triggers for condition => #{@condition} and action => #{current_action}.")
           triggers_to_fire = @env[:machine].config.trigger.triggers.find_all { |t| t[:action] == current_action && t[:condition] == @condition }
           unless triggers_to_fire.empty?
-            @env[:ui].info I18n.t("vagrant_triggers.action.trigger.running_triggers", :condition => @condition)
+            @env[:ui].info I18n.t("vagrant_triggers.action.trigger.running_triggers", :action => current_action, :condition => @condition.to_s.gsub('_', ' '))
             triggers_to_fire.each do |trigger|
               if trigger[:proc]
                 dsl = DSL.new(@env[:ui], trigger[:options])
