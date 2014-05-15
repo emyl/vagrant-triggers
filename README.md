@@ -31,8 +31,15 @@ Vagrant.configure("2") do |config|
     run "script"
     ...
   end
+
+  config.trigger.instead_of :command, :option => "value" do
+    run "script"
+    ...
+  end
 end
 ```
+
+The ```instead_of``` trigger could also be aliased as ```reject```.
 
 The first argument is the command in which the trigger will be tied. It could be an array (e.g. ```[:up, :resume]```) in case of multiple commands.
 

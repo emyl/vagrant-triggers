@@ -8,14 +8,14 @@ module VagrantPlugins
           @app       = app
           @condition = condition
           @env       = env
+          @exit      = false
           @logger    = Log4r::Logger.new("vagrant::plugins::triggers::trigger")
         end
 
         def call(env)
           fire_triggers
 
-          # Carry on
-          @app.call(env)
+          @app.call(env) unless @exit
         end
 
         private
@@ -38,6 +38,7 @@ module VagrantPlugins
                   @logger.debug("Trigger command not found.")
               end
             end
+            @exit = true if @condition == :instead_of
           end
         end
       end

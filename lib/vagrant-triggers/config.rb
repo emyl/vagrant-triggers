@@ -15,6 +15,11 @@ module VagrantPlugins
         add_trigger(actions, :before, options, block)
       end
 
+      def instead_of(actions, options = {}, &block)
+        add_trigger(actions, :instead_of, options, block)
+      end
+      alias_method :reject, :instead_of
+
       def validate(machine)
         errors = []
 

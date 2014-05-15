@@ -20,6 +20,11 @@ describe VagrantPlugins::Triggers::Config do
       expect(config.triggers).to have(1).item
     end
 
+    it "should add instead_of triggers" do
+      config.instead_of(:up) { run "ls" }
+      expect(config.triggers).to have(1).item
+    end
+
     it "should add after triggers" do
       config.after(:up) { run "ls" }
       expect(config.triggers).to have(1).item

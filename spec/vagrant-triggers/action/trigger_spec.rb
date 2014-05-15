@@ -62,4 +62,10 @@ describe VagrantPlugins::Triggers::Action::Trigger do
     VagrantPlugins::Triggers::DSL.should_not_receive(:new)
     described_class.new(app, env, condition).call(env)
   end
+
+  it "shouldn't carry on in the middleware chain on instead_of condition" do
+    @triggers[0][:condition] = :instead_of
+    app.should_not_receive(:call).with(env)
+    described_class.new(app, env, :instead_of).call(env)
+  end
 end
