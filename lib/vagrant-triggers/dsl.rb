@@ -38,6 +38,11 @@ module VagrantPlugins
       end
       alias_method :execute, :run
 
+      def run_remote(raw_command, options = {})
+        run("vagrant ssh -c '#{raw_command}' #{@machine.name}", options)
+      end
+      alias_method :execute_remote, :run_remote
+
       def method_missing(method, *args, &block)
         # If the @ui object responds to the given method, call it
         if @ui.respond_to?(method)

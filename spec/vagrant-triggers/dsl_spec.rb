@@ -139,4 +139,12 @@ describe VagrantPlugins::Triggers::DSL do
       ENV["PATH"]         = @original_path
     end
   end
+
+  context "run_remote" do
+    it "should generate a 'vagrant ssh -c' command" do
+      machine.stub(:name => "vm1")
+      @dsl.should_receive(:run).with("vagrant ssh -c '#{@command}' vm1", {})
+      @dsl.run_remote(@command, {})
+    end
+  end
 end

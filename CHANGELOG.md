@@ -7,6 +7,7 @@ NEW FEATURES:
 
 IMPROVEMENTS:
 
+  - DSL: add ```run_remote``` as alias to ```run("vagrant ssh -c ...")```.
   - DSL: the ```error``` statement now stops the action and makes Vagrant fail with an error.
   - Ensure the ```run``` statement always returns the command output.
 
