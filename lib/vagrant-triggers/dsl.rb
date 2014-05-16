@@ -5,8 +5,9 @@ require "vagrant/util/subprocess"
 module VagrantPlugins
   module Triggers
     class DSL
-      def initialize(ui, options = {})
+      def initialize(ui, machine, options = {})
         @logger  = Log4r::Logger.new("vagrant::plugins::triggers::dsl")
+        @machine = machine
         @options = options
         @ui      = ui
       end

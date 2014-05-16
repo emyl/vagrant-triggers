@@ -5,12 +5,13 @@ describe VagrantPlugins::Triggers::DSL do
   let(:result) { double("result", :exit_code => 0, :stderr => stderr) }
   let(:stderr) { double("stderr") }
 
-  let(:ui)     { double("ui", :info => info) }
-  let(:info)   { double("info") }
+  let(:machine) { double("machine") }
+  let(:ui)      { double("ui", :info => info) }
+  let(:info)    { double("info") }
 
   before do
     @command = "foo"
-    @dsl     = described_class.new(ui, {})
+    @dsl     = described_class.new(ui, machine, {})
 
     result.stub(:stdout => "Some output")
   end
@@ -40,13 +41,13 @@ describe VagrantPlugins::Triggers::DSL do
     end
 
     it "shouldn't raise an error if executed command exits with non-zero code but :force option was specified" do
-      dsl = described_class.new(ui, :force => true)
+      dsl = described_class.new(ui, machine, :force => true)
       result.stub(:exit_code => 1)
       expect { dsl.run(@command) }.not_to raise_error()
     end
 
     it "should display output if :stdout option was specified" do
-      dsl = described_class.new(ui, :stdout => true)
+      dsl = described_class.new(ui, machine, :stdout => true)
       ui.should_receive(:info).with(/Some output/)
       dsl.run(@command)
     end
@@ -82,14 +83,14 @@ describe VagrantPlugins::Triggers::DSL do
     end
 
     it "should honor the :append_to_path option and restore original path after execution" do
-      dsl = described_class.new(ui, :append_to_path => @tmp_dir)
+      dsl = described_class.new(ui, machine, :append_to_path => @tmp_dir)
       original_path = ENV["PATH"]
       dsl.run(@command)
       expect(ENV["PATH"]).to eq(original_path)
     end
 
     it "should accept an array for the :append_to_path option" do
-      dsl = described_class.new(ui, :append_to_path => [@tmp_dir, @tmp_dir])
+      dsl = described_class.new(ui, machine, :append_to_path => [@tmp_dir, @tmp_dir])
       expect { dsl.run(@command) }.not_to raise_error()
     end
   end

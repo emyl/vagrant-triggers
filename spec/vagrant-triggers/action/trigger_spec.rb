@@ -35,7 +35,7 @@ describe VagrantPlugins::Triggers::Action::Trigger do
 
   it "should fire trigger when all conditions are satisfied" do
     dsl = double("dsl")
-    VagrantPlugins::Triggers::DSL.stub(:new).with(ui, @triggers.first[:options]).and_return(dsl)
+    VagrantPlugins::Triggers::DSL.stub(:new).with(ui, machine, @triggers.first[:options]).and_return(dsl)
     dsl.should_receive(:instance_eval).and_yield
     described_class.new(app, env, condition).call(env)
   end
