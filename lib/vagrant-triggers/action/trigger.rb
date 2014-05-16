@@ -36,6 +36,14 @@ module VagrantPlugins
               next if trigger[:action]    != trigger_env[:action]
               next if trigger[:condition] != trigger_env[:condition]
 
+              if trigger[:options][:vm]
+                match = false
+                Array(trigger[:options][:vm]).each do |pattern|
+                  match = true if trigger_env[:vm].match(pattern)
+                end
+                next unless match
+              end
+
               triggers << trigger
             end
           end
@@ -58,7 +66,8 @@ module VagrantPlugins
         def trigger_env
           {
             :action    => @env[:machine_action],
-            :condition => @condition
+            :condition => @condition,
+            :vm        => @env[:machine].name
           }
         end
       end

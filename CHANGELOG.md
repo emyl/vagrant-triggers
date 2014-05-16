@@ -3,6 +3,7 @@
 NEW FEATURES:
 
   - New trigger type: ```instead_of```.
+  - Add ```:vm``` option for choosing the target vm(s) in case of multi-machine Vagrantfile.
 
 IMPROVEMENTS:
 
