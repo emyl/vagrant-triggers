@@ -104,6 +104,7 @@ describe VagrantPlugins::Triggers::DSL do
       ENV["GEM_PATH"]                       = ENV["GEM_HOME"]
       ENV["GEMRC"]                          = "#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}/etc/gemrc"
       ENV["PATH"]                           = "#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}/bin:#{ENV["PATH"]}"
+      ENV["RUBYOPT"]                        = "-rbundler/setup"
     end
 
     context "with a command which is present into the Vagrant embedded dir" do
@@ -131,12 +132,21 @@ describe VagrantPlugins::Triggers::DSL do
       end
     end
 
+    it "should remove bundler settings from RUBYOPT" do
+      Vagrant::Util::Subprocess.should_receive(:execute) do |command|
+        expect(ENV["RUBYOPT"]).to eq("")
+        result
+      end
+      @dsl.run(@command)
+    end
+
     after do
       ENV["EMBEDDED_DIR"] = nil
       ENV["GEM_HOME"]     = nil
       ENV["GEM_PATH"]     = nil
       ENV["GEMRC"]        = nil
       ENV["PATH"]         = @original_path
+      ENV["RUBYOPT"]      = nil
     end
   end
 

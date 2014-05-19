@@ -66,7 +66,11 @@ module VagrantPlugins
         new_path  = ENV["VAGRANT_INSTALLER_ENV"] ? ENV["PATH"].gsub(/#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}.*?#{File::PATH_SEPARATOR}/, "") : ENV["PATH"]
         new_path += Array(@options[:append_to_path]).map { |dir| "#{File::PATH_SEPARATOR}#{dir}" }.join
         ENV["PATH"] = new_path
-        @logger.debug("PATH modifed: #{ENV["PATH"]}")
+        @logger.debug("PATH modified: #{ENV["PATH"]}")
+
+        # Remove bundler settings from RUBYOPT
+        ENV["RUBYOPT"] = (ENV["RUBYOPT"] || "").gsub(/-rbundler\/setup\s*/, "")
+        @logger.debug("RUBYOPT modified: #{ENV["RUBYOPT"]}")
 
         # Add the VAGRANT_NO_TRIGGERS variable to avoid loops
         ENV["VAGRANT_NO_TRIGGERS"] = "1"

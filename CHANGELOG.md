@@ -11,6 +11,10 @@ IMPROVEMENTS:
   - DSL: the ```error``` statement now stops the action and makes Vagrant fail with an error.
   - Ensure the ```run``` statement always returns the command output.
 
+BUG FIXES:
+
+  - Remove bundler settings from RUBYOPT [(reopened #5)](https://github.com/emyl/vagrant-triggers/issues/5)
+
 ## 0.3.0 (April 4, 2014)
 
 CHANGES:
