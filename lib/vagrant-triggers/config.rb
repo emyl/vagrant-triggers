@@ -20,6 +20,12 @@ module VagrantPlugins
       end
       alias_method :reject, :instead_of
 
+      def merge(other)
+        super.tap do |result|
+          result.instance_variable_set(:@triggers, @triggers + other.triggers)
+        end
+      end
+
       def validate(machine)
         errors = []
 

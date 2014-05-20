@@ -13,6 +13,7 @@ IMPROVEMENTS:
 
 BUG FIXES:
 
+  - Use additive merge logic [(#12)](https://github.com/emyl/vagrant-triggers/issues/12)
   - Remove bundler settings from RUBYOPT [(reopened #5)](https://github.com/emyl/vagrant-triggers/issues/5)
 
 ## 0.3.0 (April 4, 2014)
