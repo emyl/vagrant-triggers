@@ -27,9 +27,7 @@ module VagrantPlugins
       action_hook(:trigger, Plugin::ALL_ACTIONS) do |hook|
         require_relative "action"
         unless ENV["VAGRANT_NO_TRIGGERS"]
-          hook.prepend(Action.action_trigger(:before))
-          hook.prepend(Action.action_trigger(:instead_of))
-          hook.append(Action.action_trigger(:after))
+          [:before, :instead_of, :after].each { |condition| hook.prepend(Action.action_trigger(condition)) }
         end
       end
 

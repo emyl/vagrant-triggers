@@ -1,3 +1,9 @@
+## 0.4.1 (unreleased)
+
+BUG FIXES:
+
+  - Ensure after triggers are run at the very end of the action [(#14)](https://github.com/emyl/vagrant-triggers/issues/14)
+
 ## 0.4.0 (May 20, 2014)
 
 NEW FEATURES:

@@ -13,9 +13,9 @@ module VagrantPlugins
         end
 
         def call(env)
-          fire_triggers
-
+          fire_triggers unless @condition == :after
           @app.call(env) unless @exit
+          fire_triggers if @condition == :after
         end
 
         private
