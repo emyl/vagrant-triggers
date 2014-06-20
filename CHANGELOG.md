@@ -1,4 +1,4 @@
-## 0.4.1 (unreleased)
+## 0.4.1 (June 20, 2014)
 
 BUG FIXES:
 
