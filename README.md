@@ -60,6 +60,19 @@ For additional details you can take a look to the [VagrantPlugins::Triggers::DSL
 
 Triggers won't run if ```VAGRANT_NO_TRIGGERS``` environment variable is set.
 
+## A simple example
+
+Cleanup some temporary files after machine destroy:
+
+```ruby
+
+Vagrant.configure("2") do |config|
+  config.trigger.after :destroy do
+    run "rm -Rf tmp/*"
+  end
+end
+```
+
 ## A more detailed example
 
 In the following example a VirtualBox VM (not managed by Vagrant) will be tied to the machine defined in ```Vagrantfile```, to make so that it follows its lifecycle:
