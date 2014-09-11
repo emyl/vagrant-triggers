@@ -150,11 +150,27 @@ describe VagrantPlugins::Triggers::DSL do
     end
   end
 
-  context "run_remote" do
-    it "should generate a 'vagrant ssh -c' command" do
-      machine.stub(:name => "vm1")
-      @dsl.should_receive(:run).with("vagrant ssh -c '#{@command}' vm1", {})
-      @dsl.run_remote(@command, {})
+  context "run a remote command" do
+    before do
+      Vagrant::Util::Subprocess::Result.stub(:new => result)
+      machine.stub_chain(:communicate, :sudo).and_return(0)
+    end
+
+    it "should raise an error if executed command exits with non-zero code" do
+      result.stub(:exit_code => 1)
+      expect { @dsl.run_remote(@command) }.to raise_error(VagrantPlugins::Triggers::Errors::CommandFailed)
+    end
+
+    it "shouldn't raise an error if executed command exits with non-zero code but :force option was specified" do
+      dsl = described_class.new(ui, machine, :force => true)
+      result.stub(:exit_code => 1)
+      expect { dsl.run_remote(@command) }.not_to raise_error()
+    end
+
+    it "should display output if :stdout option was specified" do
+      dsl = described_class.new(ui, machine, :stdout => true)
+      ui.should_receive(:info).with(/Some output/)
+      dsl.run_remote(@command)
     end
   end
 end

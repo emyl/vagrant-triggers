@@ -28,18 +28,21 @@ module VagrantPlugins
         ensure
           ENV.replace(env_backup)
         end
-        if result.exit_code != 0 && !@options[:force]
-          raise Errors::CommandFailed, :command => raw_command, :stderr => result.stderr
-        end
-        if @options[:stdout]
-          info I18n.t("vagrant_triggers.action.trigger.command_output", :output => result.stdout)
-        end
-        result.stdout
+        process_result(raw_command, result)
       end
       alias_method :execute, :run
 
       def run_remote(raw_command, options = {})
-        run("vagrant ssh -c '#{raw_command}' #{@machine.name}", options)
+        stderr = ""
+        stdout = ""
+        exit_code = @machine.communicate.sudo(raw_command, :elevated => true, :good_exit => (0..255).to_a) do |type, data|
+          if type == :stderr
+            stderr += data
+          elsif type == :stdout
+            stdout += data
+          end
+        end
+        process_result(raw_command, Vagrant::Util::Subprocess::Result.new(exit_code, stdout, stderr))
       end
       alias_method :execute_remote, :run_remote
 
@@ -74,6 +77,16 @@ module VagrantPlugins
 
         # Add the VAGRANT_NO_TRIGGERS variable to avoid loops
         ENV["VAGRANT_NO_TRIGGERS"] = "1"
+      end
+
+      def process_result(command, result)
+        if result.exit_code != 0 && !@options[:force]
+          raise Errors::CommandFailed, :command => command, :stderr => result.stderr
+        end
+        if @options[:stdout]
+          info I18n.t("vagrant_triggers.action.trigger.command_output", :output => result.stdout)
+        end
+        result.stdout
       end
     end
   end
