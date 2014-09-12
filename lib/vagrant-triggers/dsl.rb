@@ -28,7 +28,7 @@ module VagrantPlugins
         ensure
           ENV.replace(env_backup)
         end
-        process_result(raw_command, result)
+        process_result(raw_command, result, @options.merge(options))
       end
       alias_method :execute, :run
 
@@ -42,7 +42,7 @@ module VagrantPlugins
             stdout += data
           end
         end
-        process_result(raw_command, Vagrant::Util::Subprocess::Result.new(exit_code, stdout, stderr))
+        process_result(raw_command, Vagrant::Util::Subprocess::Result.new(exit_code, stdout, stderr), @options.merge(options))
       end
       alias_method :execute_remote, :run_remote
 
@@ -79,11 +79,11 @@ module VagrantPlugins
         ENV["VAGRANT_NO_TRIGGERS"] = "1"
       end
 
-      def process_result(command, result)
-        if result.exit_code != 0 && !@options[:force]
+      def process_result(command, result, options)
+        if result.exit_code != 0 && !options[:force]
           raise Errors::CommandFailed, :command => command, :stderr => result.stderr
         end
-        if @options[:stdout]
+        if options[:stdout]
           info I18n.t("vagrant_triggers.action.trigger.command_output", :output => result.stdout)
         end
         result.stdout
