@@ -1,3 +1,10 @@
+## 0.4.2 (September 12, 2014)
+
+IMPROVEMENTS:
+
+  - Use Vagrant communicator interface for running remote commands [(#17)](https://github.com/emyl/vagrant-triggers/issues/17)
+  - Allow options to be overridden by a single command.
+
 ## 0.4.1 (June 20, 2014)
 
 BUG FIXES:
