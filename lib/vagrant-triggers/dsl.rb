@@ -18,8 +18,8 @@ module VagrantPlugins
 
       def run(raw_command, options = {})
         info I18n.t("vagrant_triggers.action.trigger.executing_command", :command => raw_command)
-        command     = Shellwords.shellsplit(raw_command)
-        env_backup  = ENV.to_hash
+        command    = Shellwords.shellsplit(raw_command)
+        env_backup = ENV.to_hash
         begin
           build_environment
           result = Vagrant::Util::Subprocess.execute(command[0], *command[1..-1])
@@ -33,6 +33,7 @@ module VagrantPlugins
       alias_method :execute, :run
 
       def run_remote(raw_command, options = {})
+        info I18n.t("vagrant_triggers.action.trigger.executing_remote_command", :command => raw_command)
         stderr = ""
         stdout = ""
         exit_code = @machine.communicate.sudo(raw_command, :elevated => true, :good_exit => (0..255).to_a) do |type, data|
