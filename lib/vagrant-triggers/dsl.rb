@@ -64,6 +64,9 @@ module VagrantPlugins
       def build_environment
         @logger.debug("Original environment: #{ENV.inspect}")
 
+        # Remove GEM_ environment variables
+        ["GEM_HOME", "GEM_PATH", "GEMRC"].each { |gem_var| ENV.delete(gem_var) }
+
         # Create the new PATH removing Vagrant bin directory
         # and appending directories specified through the
         # :append_to_path option

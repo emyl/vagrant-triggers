@@ -122,7 +122,7 @@ describe VagrantPlugins::Triggers::DSL do
       end
     end
 
-    ["BUNDLE_BIN_PATH", "BUNDLE_GEMFILE", "GEMRC"].each do |env_var|
+    ["BUNDLE_BIN_PATH", "BUNDLE_GEMFILE", "GEM_PATH", "GEMRC"].each do |env_var|
       it "should not pass #{env_var} to the executed command" do
         Vagrant::Util::Subprocess.should_receive(:execute) do |command|
           expect(ENV).not_to have_key(env_var)
@@ -130,14 +130,6 @@ describe VagrantPlugins::Triggers::DSL do
         end
         @dsl.run(@command)
       end
-    end
-
-    it "should clear GEM_PATH before passing it to the executed command" do
-      Vagrant::Util::Subprocess.should_receive(:execute) do |command|
-        expect(ENV["GEM_PATH"]).to eq("")
-        result
-      end
-      @dsl.run(@command)
     end
 
     it "should remove bundler settings from RUBYOPT" do
