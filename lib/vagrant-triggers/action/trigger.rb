@@ -55,7 +55,7 @@ module VagrantPlugins
 
           triggers_to_fire.each do |trigger|
             if trigger[:proc]
-              dsl = DSL.new(@env[:ui], @env[:machine], trigger[:options])
+              dsl = DSL.new(@env[:machine], trigger[:options])
               dsl.instance_eval &trigger[:proc]
             else
               @logger.debug("Trigger command not found.")

@@ -5,7 +5,7 @@ describe VagrantPlugins::Triggers::Action::Trigger do
   let(:env)            { { :action_name => action_name, :machine => machine, :machine_action => machine_action, :ui => ui } }
   let(:condition)      { double("condition") }
   let(:action_name)    { double("action_name") }
-  let(:machine)        { double("machine") }
+  let(:machine)        { double("machine", :ui => ui) }
   let(:machine_action) { double("machine_action") }
 
   let(:ui)             { double("ui", :info => info) }
@@ -35,7 +35,7 @@ describe VagrantPlugins::Triggers::Action::Trigger do
 
   it "should fire trigger when all conditions are satisfied" do
     dsl = double("dsl")
-    VagrantPlugins::Triggers::DSL.stub(:new).with(ui, machine, @triggers.first[:options]).and_return(dsl)
+    VagrantPlugins::Triggers::DSL.stub(:new).with(machine, @triggers.first[:options]).and_return(dsl)
     dsl.should_receive(:instance_eval).and_yield
     described_class.new(app, env, condition).call(env)
   end
