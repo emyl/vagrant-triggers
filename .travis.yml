@@ -4,6 +4,7 @@ rvm:
 before_install:
   - gem update --system
   - rvm @global do gem uninstall -ax bundler
+  - gem uninstall -ax bundler
   - gem install bundler -v 1.5.3
 env:
   - VAGRANT_VERSION=v1.6.5
