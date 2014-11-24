@@ -21,8 +21,11 @@ module VagrantPlugins
         command    = Shellwords.shellsplit(raw_command)
         env_backup = ENV.to_hash
         begin
-          build_environment
-          result = Vagrant::Util::Subprocess.execute(command[0], *command[1..-1])
+          result = nil
+          Bundler.with_clean_env do
+            build_environment
+            result = Vagrant::Util::Subprocess.execute(command[0], *command[1..-1])
+          end
         rescue Vagrant::Errors::CommandUnavailable, Vagrant::Errors::CommandUnavailableWindows
           raise Errors::CommandUnavailable, :command => command[0]
         ensure
@@ -71,10 +74,6 @@ module VagrantPlugins
         new_path += Array(@options[:append_to_path]).map { |dir| "#{File::PATH_SEPARATOR}#{dir}" }.join
         ENV["PATH"] = new_path
         @logger.debug("PATH modified: #{ENV["PATH"]}")
-
-        # Remove bundler settings from RUBYOPT
-        ENV["RUBYOPT"] = (ENV["RUBYOPT"] || "").gsub(/-rbundler\/setup\s*/, "")
-        @logger.debug("RUBYOPT modified: #{ENV["RUBYOPT"]}")
 
         # Add the VAGRANT_NO_TRIGGERS variable to avoid loops
         ENV["VAGRANT_NO_TRIGGERS"] = "1"

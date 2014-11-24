@@ -122,7 +122,7 @@ describe VagrantPlugins::Triggers::DSL do
       end
     end
 
-    ["GEM_HOME", "GEM_PATH", "GEMRC"].each do |env_var|
+    ["BUNDLE_BIN_PATH", "BUNDLE_GEMFILE", "GEM_PATH", "GEMRC"].each do |env_var|
       it "should not pass #{env_var} to the executed command" do
         Vagrant::Util::Subprocess.should_receive(:execute) do |command|
           expect(ENV).not_to have_key(env_var)
