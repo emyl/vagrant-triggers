@@ -39,7 +39,7 @@ module VagrantPlugins
               if trigger[:options][:vm]
                 match = false
                 Array(trigger[:options][:vm]).each do |pattern|
-                  match = true if trigger_env[:vm].match(pattern)
+                  match = true if trigger_env[:vm].match(Regexp.new(pattern))
                 end
                 next unless match
               end

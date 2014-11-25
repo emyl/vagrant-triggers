@@ -72,7 +72,7 @@ describe VagrantPlugins::Triggers::Action::Trigger do
 
   context ":vm option" do
     before do
-      machine.stub(:name).and_return("vm1")
+      machine.stub(:name).and_return(:vm1)
     end
 
     it "should fire trigger when :vm option match" do

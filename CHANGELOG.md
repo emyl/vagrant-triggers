@@ -2,6 +2,7 @@
 
 BUG FIXES:
 
+  - Passing strings to ```:vm``` option now works [(#30)](https://github.com/emyl/vagrant-triggers/issues/30)
   - Use Bundler.with_clean_env to remove bundler artifacts from environment [(#25)](https://github.com/emyl/vagrant-triggers/issues/25)
 
 ## 0.4.2 (September 12, 2014)
