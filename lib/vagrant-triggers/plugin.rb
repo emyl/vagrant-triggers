@@ -38,8 +38,18 @@ module VagrantPlugins
         Config::Trigger
       end
 
+      config(:trigger, :provisioner) do
+        require_relative "config/provisioner"
+        Config::Provisioner
+      end
+
+      provisioner(:trigger) do
+        require_relative "provisioner"
+        Provisioner
+      end
+
       # This initializes the I18n load path so that the plugin specific
-      # transations work.
+      # translations work.
       def self.init_i18n
         I18n.load_path << File.expand_path("locales/en.yml", Triggers.source_root)
         I18n.reload!
