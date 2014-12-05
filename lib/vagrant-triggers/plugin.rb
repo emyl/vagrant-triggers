@@ -34,8 +34,8 @@ module VagrantPlugins
       end
 
       config(:trigger) do
-        require_relative "config"
-        Config
+        require_relative "config/trigger"
+        Config::Trigger
       end
 
       # This initializes the I18n load path so that the plugin specific
