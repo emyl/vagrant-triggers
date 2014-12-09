@@ -10,7 +10,9 @@ module VagrantPlugins
       end
 
       def provision
-        @dsl.instance_eval &@config.trigger_body
+        unless ENV["VAGRANT_NO_TRIGGERS"]
+          @dsl.instance_eval &@config.trigger_body
+        end
       end
 
       def cleanup
