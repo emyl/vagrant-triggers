@@ -46,8 +46,8 @@ The first argument is the command in which the trigger will be tied. It could be
 ### Options
 
 * ```:append_to_path => ["dir", "dir"]```: additional places where looking for scripts. See [this wiki page](https://github.com/emyl/vagrant-triggers/wiki/The-:append_to_path-option) for details.
-* ```:force => true```: continue even if one of the scripts fails (exits with non-zero code)
-* ```:stdout => true```: display script output
+* ```:force => true```: continue even if one of the scripts fails (exits with non-zero code).
+* ```:stdout => true```: display script output.
 * ```:vm => ["vm1", /vm[2-3]/]```: fire only for matching virtual machines. Value can be a string, a regexp or an array of strings and/or regexps.
 
 ### Trigger block DSL
