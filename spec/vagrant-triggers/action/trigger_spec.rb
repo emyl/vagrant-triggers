@@ -70,45 +70,8 @@ describe VagrantPlugins::Triggers::Action::Trigger do
     described_class.new(app, env, :instead_of).call(env)
   end
 
-  context ":vm option" do
-    before do
-      machine.stub(:name).and_return(:vm1)
-    end
-
-    it "should fire trigger when :vm option match" do
-      @triggers[0][:options][:vm] = "vm1"
-      VagrantPlugins::Triggers::DSL.should_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "shouldn't fire trigger when :vm option doesn't match" do
-      @triggers[0][:options][:vm] = "vm2"
-      VagrantPlugins::Triggers::DSL.should_not_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "should fire trigger when :vm option is an array and one of the elements match" do
-      @triggers[0][:options][:vm] = ["vm1", "vm2"]
-      VagrantPlugins::Triggers::DSL.should_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "shouldn't fire trigger when :vm option is an array and no element match" do
-      @triggers[0][:options][:vm] = ["vm2", "vm3"]
-      VagrantPlugins::Triggers::DSL.should_not_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "should fire trigger when :vm option is a regex and the pattern match" do
-      @triggers[0][:options][:vm] = /^vm/
-      VagrantPlugins::Triggers::DSL.should_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "shouldn't fire trigger when :vm option is a regex and the pattern doesn't match" do
-      @triggers[0][:options][:vm] = /staging/
-      VagrantPlugins::Triggers::DSL.should_not_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
+  it "should handle gracefully a not matching :vm option" do
+    VagrantPlugins::Triggers::DSL.stub(:new).and_raise(VagrantPlugins::Triggers::Errors::NotMatchingMachine)
+    expect { described_class.new(app, env, condition).call(env) }.not_to raise_exception()
   end
 end

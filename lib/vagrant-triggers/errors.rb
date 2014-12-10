@@ -16,6 +16,9 @@ module VagrantPlugins
       class DSLError < VagrantTriggerError
         error_key(:dsl_error)
       end
+
+      class NotMatchingMachine < VagrantTriggerError
+      end
     end
   end
 end

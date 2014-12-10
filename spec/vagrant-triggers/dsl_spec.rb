@@ -16,6 +16,42 @@ describe VagrantPlugins::Triggers::DSL do
     result.stub(:stdout => "Some output")
   end
 
+  context ":vm option" do
+    before do
+      machine.stub(:name => :vm1)
+    end
+
+    it "should raise no exception when :vm option match" do
+      options = { :vm => "vm1" }
+      expect { described_class.new(machine, options) }.not_to raise_error()
+    end
+
+    it "should raise NotMatchingMachine when :vm option doesn't match" do
+      options = { :vm => "vm2" }
+      expect { described_class.new(machine, options) }.to raise_error(VagrantPlugins::Triggers::Errors::NotMatchingMachine)
+    end
+
+    it "should raise no exception when :vm option is an array and one of the elements match" do
+      options = { :vm => ["vm1", "vm2"] }
+      expect { described_class.new(machine, options) }.not_to raise_error()
+    end
+
+    it "should raise NotMatchingMachine when :vm option is an array and no element match" do
+      options = { :vm => ["vm2", "vm3"] }
+      expect { described_class.new(machine, options) }.to raise_error(VagrantPlugins::Triggers::Errors::NotMatchingMachine)
+    end
+
+    it "should raise no exception when :vm option is a regex and the pattern match" do
+      options = { :vm => /^vm/ }
+      expect { described_class.new(machine, options) }.not_to raise_error()
+    end
+
+    it "should raise NotMatchingMachine when :vm option is a regex and the pattern doesn't match" do
+      options = { :vm => /staging/ }
+      expect { described_class.new(machine, options) }.to raise_error(VagrantPlugins::Triggers::Errors::NotMatchingMachine)
+    end
+  end
+
   context "error" do
     it "should raise a DSL error on UI error" do
       ui.should_receive(:error).with("Error message")

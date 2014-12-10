@@ -3,7 +3,11 @@ module VagrantPlugins
     class Provisioner < Vagrant.plugin("2", :provisioner)
       def initialize(machine, config)
         @config  = config
-        @dsl     = DSL.new(machine, @config.options)
+        begin
+          @dsl = DSL.new(machine, @config.options)
+        rescue Errors::NotMatchingMachine
+          ENV["VAGRANT_NO_TRIGGERS"] = "1"
+        end
       end
 
       def configure(root_config)
