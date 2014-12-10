@@ -9,25 +9,24 @@ describe VagrantPlugins::Triggers::Config do
       config.tap do |o|
         o.finalize!
       end
+      expect(config.triggers).to eq([])
     end
-
-    its("triggers") { should eq [] }
   end
 
   describe "add triggers" do
     it "should add before triggers" do
       config.before(:up) { run "ls" }
-      expect(config.triggers).to have(1).item
+      expect(config.triggers.size).to eq(1)
     end
 
     it "should add instead_of triggers" do
       config.instead_of(:up) { run "ls" }
-      expect(config.triggers).to have(1).item
+      expect(config.triggers.size).to eq(1)
     end
 
     it "should add after triggers" do
       config.after(:up) { run "ls" }
-      expect(config.triggers).to have(1).item
+      expect(config.triggers.size).to eq(1)
     end
   end
 
@@ -35,24 +34,24 @@ describe VagrantPlugins::Triggers::Config do
     it "should record multiple entries" do
       config.before(:up) { run "ls" }
       config.after(:up) { run "ls" }
-      expect(config.triggers).to have(2).items
+      expect(config.triggers.size).to eq(2)
     end
 
     it "should record multiple entries if the action is an array" do
       config.before([:up, :halt]) { run "ls" }
-      expect(config.triggers).to have(2).items
+      expect(config.triggers.size).to eq(2)
     end
   end
 
   describe "validation" do
     it "should validate" do
       config.finalize!
-      expect(config.validate(machine)["triggers"]).to have(:no).items
+      expect(config.validate(machine)["triggers"].size).to eq(0)
     end
 
     it "shouldn't accept invalid methods" do
       config.foo "bar"
-      expect(config.validate(machine)["triggers"]).to have(1).item
+      expect(config.validate(machine)["triggers"].size).to eq(1)
     end
   end
 end
