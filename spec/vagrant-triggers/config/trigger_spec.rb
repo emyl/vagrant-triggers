@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe VagrantPlugins::Triggers::Config do
+describe VagrantPlugins::Triggers::Config::Trigger do
   let(:config)  { described_class.new }
   let(:machine) { double("machine") }
 

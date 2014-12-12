@@ -36,14 +36,6 @@ module VagrantPlugins
               next if trigger[:action]    != trigger_env[:action]
               next if trigger[:condition] != trigger_env[:condition]
 
-              if trigger[:options][:vm]
-                match = false
-                Array(trigger[:options][:vm]).each do |pattern|
-                  match = true if trigger_env[:vm].match(Regexp.new(pattern))
-                end
-                next unless match
-              end
-
               triggers << trigger
             end
           end
@@ -55,8 +47,11 @@ module VagrantPlugins
 
           triggers_to_fire.each do |trigger|
             if trigger[:proc]
-              dsl = DSL.new(@env[:ui], @env[:machine], trigger[:options])
-              dsl.instance_eval &trigger[:proc]
+              begin
+                dsl = DSL.new(@env[:machine], trigger[:options])
+                dsl.instance_eval &trigger[:proc]
+              rescue Errors::NotMatchingMachine
+              end
             else
               @logger.debug("Trigger command not found.")
             end

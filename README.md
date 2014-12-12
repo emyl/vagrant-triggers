@@ -43,6 +43,21 @@ The ```instead_of``` trigger could also be aliased as ```reject```.
 
 The first argument is the command in which the trigger will be tied. It could be an array (e.g. ```[:up, :resume]```) in case of multiple commands.
 
+Starting from version 0.5.0, triggers can also be run as a provisioner:
+
+```ruby
+Vagrant.configure("2") do |config|
+  # Your existing Vagrant configuration
+  ...
+
+  config.vm.provision "trigger", :option => "value" do |trigger|
+    trigger.fire do
+      run "script"
+    end
+  end
+end
+```
+
 ### Options
 
 * ```:append_to_path => ["dir", "dir"]```: additional places where looking for scripts. See [this wiki page](https://github.com/emyl/vagrant-triggers/wiki/The-:append_to_path-option) for details.

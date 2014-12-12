@@ -5,15 +5,51 @@ describe VagrantPlugins::Triggers::DSL do
   let(:result) { double("result", :exit_code => 0, :stderr => stderr) }
   let(:stderr) { double("stderr") }
 
-  let(:machine) { double("machine") }
+  let(:machine) { double("machine", :ui => ui) }
   let(:ui)      { double("ui", :info => info) }
   let(:info)    { double("info") }
 
   before do
     @command = "foo"
-    @dsl     = described_class.new(ui, machine, {})
+    @dsl     = described_class.new(machine, {})
 
     result.stub(:stdout => "Some output")
+  end
+
+  context ":vm option" do
+    before do
+      machine.stub(:name => :vm1)
+    end
+
+    it "should raise no exception when :vm option match" do
+      options = { :vm => "vm1" }
+      expect { described_class.new(machine, options) }.not_to raise_error()
+    end
+
+    it "should raise NotMatchingMachine when :vm option doesn't match" do
+      options = { :vm => "vm2" }
+      expect { described_class.new(machine, options) }.to raise_error(VagrantPlugins::Triggers::Errors::NotMatchingMachine)
+    end
+
+    it "should raise no exception when :vm option is an array and one of the elements match" do
+      options = { :vm => ["vm1", "vm2"] }
+      expect { described_class.new(machine, options) }.not_to raise_error()
+    end
+
+    it "should raise NotMatchingMachine when :vm option is an array and no element match" do
+      options = { :vm => ["vm2", "vm3"] }
+      expect { described_class.new(machine, options) }.to raise_error(VagrantPlugins::Triggers::Errors::NotMatchingMachine)
+    end
+
+    it "should raise no exception when :vm option is a regex and the pattern match" do
+      options = { :vm => /^vm/ }
+      expect { described_class.new(machine, options) }.not_to raise_error()
+    end
+
+    it "should raise NotMatchingMachine when :vm option is a regex and the pattern doesn't match" do
+      options = { :vm => /staging/ }
+      expect { described_class.new(machine, options) }.to raise_error(VagrantPlugins::Triggers::Errors::NotMatchingMachine)
+    end
   end
 
   context "error" do
@@ -41,13 +77,13 @@ describe VagrantPlugins::Triggers::DSL do
     end
 
     it "shouldn't raise an error if executed command exits with non-zero code but :force option was specified" do
-      dsl = described_class.new(ui, machine, :force => true)
+      dsl = described_class.new(machine, :force => true)
       result.stub(:exit_code => 1)
       expect { dsl.run(@command) }.not_to raise_error()
     end
 
     it "should display output if :stdout option was specified" do
-      dsl = described_class.new(ui, machine, :stdout => true)
+      dsl = described_class.new(machine, :stdout => true)
       ui.should_receive(:info).with(/Some output/)
       dsl.run(@command)
     end
@@ -83,14 +119,14 @@ describe VagrantPlugins::Triggers::DSL do
     end
 
     it "should honor the :append_to_path option and restore original path after execution" do
-      dsl = described_class.new(ui, machine, :append_to_path => @tmp_dir)
+      dsl = described_class.new(machine, :append_to_path => @tmp_dir)
       original_path = ENV["PATH"]
       dsl.run(@command)
       expect(ENV["PATH"]).to eq(original_path)
     end
 
     it "should accept an array for the :append_to_path option" do
-      dsl = described_class.new(ui, machine, :append_to_path => [@tmp_dir, @tmp_dir])
+      dsl = described_class.new(machine, :append_to_path => [@tmp_dir, @tmp_dir])
       expect { dsl.run(@command) }.not_to raise_error()
     end
   end
@@ -162,13 +198,13 @@ describe VagrantPlugins::Triggers::DSL do
     end
 
     it "shouldn't raise an error if executed command exits with non-zero code but :force option was specified" do
-      dsl = described_class.new(ui, machine, :force => true)
+      dsl = described_class.new(machine, :force => true)
       result.stub(:exit_code => 1)
       expect { dsl.run_remote(@command) }.not_to raise_error()
     end
 
     it "should display output if :stdout option was specified" do
-      dsl = described_class.new(ui, machine, :stdout => true)
+      dsl = described_class.new(machine, :stdout => true)
       ui.should_receive(:info).with(/Some output/)
       dsl.run_remote(@command)
     end

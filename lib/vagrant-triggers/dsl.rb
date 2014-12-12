@@ -5,11 +5,19 @@ require "vagrant/util/subprocess"
 module VagrantPlugins
   module Triggers
     class DSL
-      def initialize(ui, machine, options = {})
+      def initialize(machine, options = {})
+        if options[:vm]
+          match = false
+          Array(options[:vm]).each do |pattern|
+            match = true if machine.name.match(Regexp.new(pattern))
+          end
+          raise Errors::NotMatchingMachine unless match
+        end
+
         @logger  = Log4r::Logger.new("vagrant::plugins::triggers::dsl")
         @machine = machine
         @options = options
-        @ui      = ui
+        @ui      = machine.ui
       end
 
       def error(message, *opts)
