@@ -1,3 +1,9 @@
+## 0.4.4 (December 12, 2014)
+
+BUG FIXES:
+
+  - Enforce bundler dependency [(#34)](https://github.com/emyl/vagrant-triggers/issues/34)
+
 ## 0.4.3 (November 26, 2014)
 
 BUG FIXES:
