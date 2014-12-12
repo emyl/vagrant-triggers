@@ -1,3 +1,4 @@
+require "bundler"
 require "log4r"
 require "shellwords"
 require "vagrant/util/subprocess"
