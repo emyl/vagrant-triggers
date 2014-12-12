@@ -1,3 +1,9 @@
+## 0.5.0 (unreleased)
+
+NEW FEATURES:
+
+  - Triggers can now be run as a provisioner [(#21)](https://github.com/emyl/vagrant-triggers/issues/21)
+
 ## 0.4.3 (November 26, 2014)
 
 BUG FIXES:
