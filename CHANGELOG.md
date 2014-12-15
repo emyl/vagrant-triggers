@@ -2,6 +2,7 @@
 
 NEW FEATURES:
 
+  - The special action ```:ALL``` can be used when a trigger should always run [(#23)](https://github.com/emyl/vagrant-triggers/issues/23)
   - Actions can be blacklisted using ```config.trigger.blacklist```.
   - Triggers can be run as a provisioner [(#21)](https://github.com/emyl/vagrant-triggers/issues/21)
 
