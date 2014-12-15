@@ -5,7 +5,8 @@ module VagrantPlugins
         attr_reader :triggers
 
         def initialize
-          @triggers = []
+          @blacklist = []
+          @triggers  = []
         end
 
         def after(actions, options = {}, &block)
@@ -16,6 +17,14 @@ module VagrantPlugins
           add_trigger(actions, :before, options, block)
         end
 
+        def blacklist(actions = nil)
+          if actions
+            Array(actions).each { |action| @blacklist << action.to_s }
+            @blacklist.uniq!
+          end
+          @blacklist
+        end
+
         def instead_of(actions, options = {}, &block)
           add_trigger(actions, :instead_of, options, block)
         end
@@ -23,6 +32,7 @@ module VagrantPlugins
 
         def merge(other)
           super.tap do |result|
+            result.instance_variable_set(:@blacklist, @blacklist + other.blacklist)
             result.instance_variable_set(:@triggers, @triggers + other.triggers)
           end
         end

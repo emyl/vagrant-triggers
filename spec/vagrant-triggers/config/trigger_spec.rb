@@ -30,6 +30,29 @@ describe VagrantPlugins::Triggers::Config::Trigger do
     end
   end
 
+  describe "blacklist" do
+    it "should blacklist an action" do
+      config.blacklist(:up)
+      expect(config.blacklist.size).to eq(1)
+    end
+
+    it "should blacklist multiple actions" do
+      config.blacklist([:up, :destroy])
+      expect(config.blacklist.size).to eq(2)
+    end
+
+    it "should convert symbols to strings" do
+      config.blacklist(:up)
+      expect(config.blacklist).to eq(["up"])
+    end
+
+    it "should blacklist an action only once" do
+      config.blacklist(["up", "destroy"])
+      config.blacklist(:up)
+      expect(config.blacklist).to eq(["up", "destroy"])
+    end
+  end
+
   describe "accept multiple entries" do
     it "should record multiple entries" do
       config.before(:up) { run "ls" }

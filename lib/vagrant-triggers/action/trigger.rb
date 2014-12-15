@@ -31,10 +31,13 @@ module VagrantPlugins
           trigger_env.each { |k, v| @logger.debug("-- #{k}: #{v}")}
 
           # Loop through all defined triggers checking for matches.
+          triggers_config  = @env[:machine].config.trigger
           triggers_to_fire = [].tap do |triggers|
-            @env[:machine].config.trigger.triggers.each do |trigger|
+            triggers_config.triggers.each do |trigger|
               next if trigger[:action]    != trigger_env[:action]
               next if trigger[:condition] != trigger_env[:condition]
+
+              next if triggers_config.blacklist.include?(trigger_env[:action])
 
               triggers << trigger
             end

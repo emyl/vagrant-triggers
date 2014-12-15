@@ -15,6 +15,7 @@ describe VagrantPlugins::Triggers::Action::Trigger do
     trigger_block = Proc.new { nil }
     @triggers     = [ { :action => machine_action, :condition => condition, :options => { }, :proc => trigger_block } ]
     machine.stub(:name)
+    machine.stub_chain(:config, :trigger, :blacklist).and_return([])
     machine.stub_chain(:config, :trigger, :triggers).and_return(@triggers)
   end
 
@@ -48,6 +49,12 @@ describe VagrantPlugins::Triggers::Action::Trigger do
 
   it "shouldn't execute trigger with no command or block" do
     @triggers[0][:proc] = nil
+    VagrantPlugins::Triggers::DSL.should_not_receive(:new)
+    described_class.new(app, env, condition).call(env)
+  end
+
+  it "shouldn't fire trigger when the action is blacklisted" do
+    machine.stub_chain(:config, :trigger, :blacklist).and_return([machine_action])
     VagrantPlugins::Triggers::DSL.should_not_receive(:new)
     described_class.new(app, env, condition).call(env)
   end
