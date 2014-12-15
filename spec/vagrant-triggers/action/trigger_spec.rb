@@ -11,7 +11,7 @@ describe VagrantPlugins::Triggers::Action::Trigger do
   let(:ui)             { double("ui", :info => info) }
   let(:info)           { double("info") }
 
-  before do
+  before :each do
     trigger_block = Proc.new { nil }
     @triggers     = [ { :action => machine_action, :condition => condition, :options => { }, :proc => trigger_block } ]
     machine.stub(:name)
@@ -41,6 +41,14 @@ describe VagrantPlugins::Triggers::Action::Trigger do
     described_class.new(app, env, condition).call(env)
   end
 
+  it "should fire trigger when condition matches and action is :ALL" do
+    @triggers[0][:action] = :ALL
+    dsl = double("dsl")
+    VagrantPlugins::Triggers::DSL.stub(:new).with(machine, @triggers.first[:options]).and_return(dsl)
+    dsl.should_receive(:instance_eval).and_yield
+    described_class.new(app, env, condition).call(env)
+  end
+
   it "should fire all defined triggers" do
     @triggers << @triggers.first
     VagrantPlugins::Triggers::DSL.should_receive(:new).twice
@@ -60,13 +68,13 @@ describe VagrantPlugins::Triggers::Action::Trigger do
   end
 
   it "shouldn't fire trigger when condition doesn't match" do
-    @triggers[0][:condition] = "blah"
+    @triggers[0][:condition] = :blah
     VagrantPlugins::Triggers::DSL.should_not_receive(:new)
     described_class.new(app, env, condition).call(env)
   end
 
   it "shouldn't fire trigger when action doesn't match" do
-    @triggers[0][:action] = "blah"
+    @triggers[0][:action] = :blah
     VagrantPlugins::Triggers::DSL.should_not_receive(:new)
     described_class.new(app, env, condition).call(env)
   end

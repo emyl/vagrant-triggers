@@ -34,7 +34,7 @@ module VagrantPlugins
           triggers_config  = @env[:machine].config.trigger
           triggers_to_fire = [].tap do |triggers|
             triggers_config.triggers.each do |trigger|
-              next if trigger[:action]    != trigger_env[:action]
+              next if trigger[:action] != :ALL && trigger[:action] != trigger_env[:action]
               next if trigger[:condition] != trigger_env[:condition]
 
               next if triggers_config.blacklist.include?(trigger_env[:action])
