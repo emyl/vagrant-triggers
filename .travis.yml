@@ -7,10 +7,12 @@ before_install:
   - gem uninstall -ax bundler
   - gem install bundler -v 1.5.3
 env:
-  - VAGRANT_VERSION=v1.6.5
+  - VAGRANT_VERSION=v1.7.1
 matrix:
   include:
     - env: VAGRANT_VERSION=master
+      rvm: 2.0.0
+    - env: VAGRANT_VERSION=v1.6.5
       rvm: 2.0.0
     - env: VAGRANT_VERSION=v1.5.4
       rvm: 2.0.0
@@ -23,3 +25,4 @@ matrix:
   allow_failures:
     - env: VAGRANT_VERSION=master
       rvm: 2.0.0
+sudo: false
