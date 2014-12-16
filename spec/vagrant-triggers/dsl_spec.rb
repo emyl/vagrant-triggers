@@ -95,6 +95,19 @@ describe VagrantPlugins::Triggers::DSL do
       end
       @dsl.run(@command)
     end
+
+    it "should remove escape sequences on UNIX Bourne Shell" do
+      command = "echo foo\\ bar"
+      Vagrant::Util::Subprocess.should_receive(:execute).with("echo", "foo bar")
+      @dsl.run(command)
+    end
+
+    it "should not remove escape sequences on MS-DOS Shell" do
+      Vagrant::Util::Platform.stub(:windows? => true)
+      command = "echo foo\\ bar"
+      Vagrant::Util::Subprocess.should_receive(:execute).with("echo", "foo\\ bar")
+      @dsl.run(command)
+    end
   end
 
   context "run a command not in the PATH" do

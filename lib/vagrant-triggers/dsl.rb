@@ -1,5 +1,4 @@
 require "log4r"
-require "shellwords"
 require "vagrant/util/subprocess"
 
 module VagrantPlugins
@@ -25,8 +24,8 @@ module VagrantPlugins
       end
 
       def run(raw_command, options = {})
-        info I18n.t("vagrant_triggers.action.trigger.executing_command", :command => raw_command)
-        command    = Shellwords.shellsplit(raw_command)
+        command = shellsplit(raw_command)
+        info I18n.t("vagrant_triggers.action.trigger.executing_command", :command => command.join(" "))
         env_backup = ENV.to_hash
         begin
           result = nil
@@ -95,6 +94,25 @@ module VagrantPlugins
           info I18n.t("vagrant_triggers.action.trigger.command_output", :output => result.stdout)
         end
         result.stdout
+      end
+
+      # This is a custom version of Shellwords.shellsplit adapted for handling MS-DOS commands.
+      #
+      # Basically escape sequences are left intact if the platform is Windows.
+      def shellsplit(line)
+        words = []
+        field = ''
+        line.scan(/\G\s*(?>([^\s\\\'\"]+)|'([^\']*)'|"((?:[^\"\\]|\\.)*)"|(\\.?)|(\S))(\s|\z)?/) do |word, sq, dq, esc, garbage, sep|
+          raise ArgumentError, "Unmatched double quote: #{line.inspect}" if garbage
+          token = (word || sq || (dq || esc))
+          token.gsub!(/\\(.)/, '\1') unless Vagrant::Util::Platform.windows?
+          field << token
+          if sep
+            words << field
+            field = ''
+          end
+        end
+        words
       end
     end
   end
