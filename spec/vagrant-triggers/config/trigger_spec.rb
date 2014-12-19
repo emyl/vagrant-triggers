@@ -11,6 +11,21 @@ describe VagrantPlugins::Triggers::Config::Trigger do
       end
       expect(config.triggers).to eq([])
     end
+
+    it "should default :stdout option to true" do
+      config.before(:up) { run "ls" }
+      expect(config.triggers.first[:options][:stdout]).to eq(true)
+    end
+
+    it "should default :stderr option to true" do
+      config.before(:up) { run "ls" }
+      expect(config.triggers.first[:options][:stderr]).to eq(true)
+    end
+
+    it "should override options" do
+      config.before(:up, :stdout => false) { run "ls" }
+      expect(config.triggers.first[:options][:stdout]).to eq(false)
+    end
   end
 
   describe "add triggers" do

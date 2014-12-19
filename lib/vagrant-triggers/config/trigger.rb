@@ -6,6 +6,7 @@ module VagrantPlugins
 
         def initialize
           @blacklist = []
+          @options   = { :stdout => true, :stderr => true }
           @triggers  = []
         end
 
@@ -51,7 +52,7 @@ module VagrantPlugins
 
         def add_trigger(actions, condition, options, proc)
           Array(actions).each do |action|
-            @triggers << { :action => action, :condition => condition, :options => options, :proc => proc }
+            @triggers << { :action => action, :condition => condition, :options => @options.merge(options), :proc => proc }
           end
         end
       end
