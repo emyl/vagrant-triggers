@@ -69,6 +69,7 @@ describe VagrantPlugins::Triggers::DSL do
   context "run a regular command" do
     before do
       Vagrant::Util::Subprocess.stub(:execute => result)
+      @options = { :notify => [:stdout, :stderr] }
     end
 
     it "should raise an error if executed command exits with non-zero code" do
@@ -82,10 +83,9 @@ describe VagrantPlugins::Triggers::DSL do
       expect { dsl.run(@command) }.not_to raise_error()
     end
 
-    it "should display output if :stdout option was specified" do
-      dsl = described_class.new(machine, :stdout => true)
-      ui.should_receive(:info).with(/Some output/)
-      dsl.run(@command)
+    it "should return standard output" do
+      dsl = described_class.new(machine)
+      expect(dsl.run(@command)).to eq("Some output")
     end
 
     it "should pass VAGRANT_NO_TRIGGERS environment variable to the command" do
@@ -98,14 +98,14 @@ describe VagrantPlugins::Triggers::DSL do
 
     it "should remove escape sequences on UNIX Bourne Shell" do
       command = "echo foo\\ bar"
-      Vagrant::Util::Subprocess.should_receive(:execute).with("echo", "foo bar")
+      Vagrant::Util::Subprocess.should_receive(:execute).with("echo", "foo bar", @options)
       @dsl.run(command)
     end
 
     it "should not remove escape sequences on MS-DOS Shell" do
       Vagrant::Util::Platform.stub(:windows? => true)
       command = "echo foo\\ bar"
-      Vagrant::Util::Subprocess.should_receive(:execute).with("echo", "foo\\ bar")
+      Vagrant::Util::Subprocess.should_receive(:execute).with("echo", "foo\\ bar", @options)
       @dsl.run(command)
     end
   end
@@ -216,10 +216,9 @@ describe VagrantPlugins::Triggers::DSL do
       expect { dsl.run_remote(@command) }.not_to raise_error()
     end
 
-    it "should display output if :stdout option was specified" do
-      dsl = described_class.new(machine, :stdout => true)
-      ui.should_receive(:info).with(/Some output/)
-      dsl.run_remote(@command)
+    it "should return standard output" do
+      dsl = described_class.new(machine)
+      expect(dsl.run_remote(@command)).to eq("Some output")
     end
   end
 end

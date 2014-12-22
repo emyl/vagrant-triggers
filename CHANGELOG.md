@@ -11,6 +11,10 @@ NEW FEATURES:
   - Actions can be blacklisted using ```config.trigger.blacklist```.
   - Triggers can be run as a provisioner [(#21)](https://github.com/emyl/vagrant-triggers/issues/21)
 
+IMPROVEMENTS:
+
+  - Do not buffer command output and better integrate in core UI [(#18)](https://github.com/emyl/vagrant-triggers/issues/18)
+
 BUG FIXES:
 
   - Handle MS-DOS commands better [(#27)](https://github.com/emyl/vagrant-triggers/issues/27)

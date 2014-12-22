@@ -2,15 +2,14 @@ en:
   vagrant_triggers:
     action:
       trigger:
-        command_output: |-
-          Command output:
-          ---------------
-          %{output}
-          ---------------
+        command_finished: |-
+          Command execution finished.
         executing_command: |-
           Executing command "%{command}"...
         executing_remote_command: |-
           Executing remote command "%{command}"...
+        remote_command_finished: |-
+          Remote command execution finished.
         running_triggers: |-
           Running triggers %{condition} %{action}...
     errors:

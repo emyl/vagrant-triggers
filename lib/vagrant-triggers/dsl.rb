@@ -13,10 +13,17 @@ module VagrantPlugins
           raise Errors::NotMatchingMachine unless match
         end
 
+        @buffer  = Hash.new("")
         @logger  = Log4r::Logger.new("vagrant::plugins::triggers::dsl")
         @machine = machine
         @options = options
         @ui      = machine.ui
+
+        @command_output = lambda do |channel, data, options|
+          ui_method = (channel == :stdout) ? :info : :error
+          @buffer[channel] += data
+          @ui.send(ui_method, data) if options[channel]
+        end
       end
 
       def error(message, *opts)
@@ -25,35 +32,37 @@ module VagrantPlugins
 
       def run(raw_command, options = {})
         command = shellsplit(raw_command)
+        options.merge!(@options) { |key, old, new| old }
         info I18n.t("vagrant_triggers.action.trigger.executing_command", :command => command.join(" "))
         env_backup = ENV.to_hash
         begin
           result = nil
           Bundler.with_clean_env do
             build_environment
-            result = Vagrant::Util::Subprocess.execute(command[0], *command[1..-1])
+            @buffer.clear
+            result = Vagrant::Util::Subprocess.execute(command[0], *command[1..-1], :notify => [:stdout, :stderr]) do |channel, data|
+              @command_output.call(channel, data, options)
+            end
           end
+          info I18n.t("vagrant_triggers.action.trigger.command_finished")
         rescue Vagrant::Errors::CommandUnavailable, Vagrant::Errors::CommandUnavailableWindows
           raise Errors::CommandUnavailable, :command => command[0]
         ensure
           ENV.replace(env_backup)
         end
-        process_result(raw_command, result, @options.merge(options))
+        process_result(raw_command, result, options)
       end
       alias_method :execute, :run
 
       def run_remote(raw_command, options = {})
+        options.merge!(@options) { |key, old, new| old }
         info I18n.t("vagrant_triggers.action.trigger.executing_remote_command", :command => raw_command)
-        stderr = ""
-        stdout = ""
-        exit_code = @machine.communicate.sudo(raw_command, :elevated => true, :good_exit => (0..255).to_a) do |type, data|
-          if type == :stderr
-            stderr += data
-          elsif type == :stdout
-            stdout += data
-          end
+        @buffer.clear
+        exit_code = @machine.communicate.sudo(raw_command, :elevated => true, :good_exit => (0..255).to_a) do |channel, data|
+          @command_output.call(channel, data, options)
         end
-        process_result(raw_command, Vagrant::Util::Subprocess::Result.new(exit_code, stdout, stderr), @options.merge(options))
+        info I18n.t("vagrant_triggers.action.trigger.remote_command_finished")
+        process_result(raw_command, Vagrant::Util::Subprocess::Result.new(exit_code, @buffer[:stdout], @buffer[:stderr]), options)
       end
       alias_method :execute_remote, :run_remote
 
@@ -89,9 +98,6 @@ module VagrantPlugins
       def process_result(command, result, options)
         if result.exit_code != 0 && !options[:force]
           raise Errors::CommandFailed, :command => command, :stderr => result.stderr
-        end
-        if options[:stdout]
-          info I18n.t("vagrant_triggers.action.trigger.command_output", :output => result.stdout)
         end
         result.stdout
       end
