@@ -1,4 +1,4 @@
-## 0.5.0 (unreleased)
+## 0.5.0 (December 29, 2014)
 
 **BEHAVIOURAL CHANGES:**
 
