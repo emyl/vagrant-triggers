@@ -4,10 +4,11 @@ require "vagrant-triggers/plugin"
 module VagrantPlugins
   module Triggers
     lib_path = Pathname.new(File.expand_path("../vagrant-triggers", __FILE__))
-    autoload :Action,   lib_path.join("action")
-    autoload :DSL,      lib_path.join("dsl")
-    autoload :Config,   lib_path.join("config")
-    autoload :Errors,   lib_path.join("errors")
+    autoload :Action,      lib_path.join("action")
+    autoload :DSL,         lib_path.join("dsl")
+    autoload :Config,      lib_path.join("config")
+    autoload :Errors,      lib_path.join("errors")
+    autoload :Provisioner, lib_path.join("provisioner")
 
     # This returns the path to the source of this plugin.
     #

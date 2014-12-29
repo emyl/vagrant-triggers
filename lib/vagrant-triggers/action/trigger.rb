@@ -31,18 +31,13 @@ module VagrantPlugins
           trigger_env.each { |k, v| @logger.debug("-- #{k}: #{v}")}
 
           # Loop through all defined triggers checking for matches.
+          triggers_config  = @env[:machine].config.trigger
           triggers_to_fire = [].tap do |triggers|
-            @env[:machine].config.trigger.triggers.each do |trigger|
-              next if trigger[:action]    != trigger_env[:action]
+            triggers_config.triggers.each do |trigger|
+              next if trigger[:action] != :ALL && trigger[:action] != trigger_env[:action]
               next if trigger[:condition] != trigger_env[:condition]
 
-              if trigger[:options][:vm]
-                match = false
-                Array(trigger[:options][:vm]).each do |pattern|
-                  match = true if trigger_env[:vm].match(Regexp.new(pattern))
-                end
-                next unless match
-              end
+              next if triggers_config.blacklist.include?(trigger_env[:action])
 
               triggers << trigger
             end
@@ -55,8 +50,11 @@ module VagrantPlugins
 
           triggers_to_fire.each do |trigger|
             if trigger[:proc]
-              dsl = DSL.new(@env[:ui], @env[:machine], trigger[:options])
-              dsl.instance_eval &trigger[:proc]
+              begin
+                dsl = DSL.new(@env[:machine], trigger[:options])
+                dsl.instance_eval &trigger[:proc]
+              rescue Errors::NotMatchingMachine
+              end
             else
               @logger.debug("Trigger command not found.")
             end

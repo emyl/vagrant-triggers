@@ -43,11 +43,27 @@ The ```instead_of``` trigger could also be aliased as ```reject```.
 
 The first argument is the command in which the trigger will be tied. It could be an array (e.g. ```[:up, :resume]```) in case of multiple commands.
 
+Starting from version 0.5.0, triggers can also be run as a provisioner:
+
+```ruby
+Vagrant.configure("2") do |config|
+  # Your existing Vagrant configuration
+  ...
+
+  config.vm.provision "trigger", :option => "value" do |trigger|
+    trigger.fire do
+      run "script"
+    end
+  end
+end
+```
+
 ### Options
 
 * ```:append_to_path => ["dir", "dir"]```: additional places where looking for scripts. See [this wiki page](https://github.com/emyl/vagrant-triggers/wiki/The-:append_to_path-option) for details.
-* ```:force => true```: continue even if one of the scripts fails (exits with non-zero code)
-* ```:stdout => true```: display script output
+* ```:force => true|false```: continue even if one of the scripts fails (exits with non-zero code). Defaults to false.
+* ```:stderr => true|false```: display standard error from scripts. Defaults to true.
+* ```:stdout => true|false```: display standard output from scripts. Defaults to true.
 * ```:vm => ["vm1", /vm[2-3]/]```: fire only for matching virtual machines. Value can be a string, a regexp or an array of strings and/or regexps.
 
 ### Trigger block DSL
@@ -109,6 +125,3 @@ To run the plugin's tests:
     $ bundle exec rake
 
 You can now fork this repository, make your changes and send a pull request.
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/emyl/vagrant-triggers/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

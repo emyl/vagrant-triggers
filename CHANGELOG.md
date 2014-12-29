@@ -1,3 +1,24 @@
+## 0.5.0 (December 29, 2014)
+
+**BEHAVIOURAL CHANGES:**
+
+  - The ```:stdout``` option now defaults to true.
+
+NEW FEATURES:
+
+  - New option ```:stderr``` for displaying standard error from scripts.
+  - The special action ```:ALL``` can be used when a trigger should always run [(#23)](https://github.com/emyl/vagrant-triggers/issues/23)
+  - Actions can be blacklisted using ```config.trigger.blacklist```.
+  - Triggers can be run as a provisioner [(#21)](https://github.com/emyl/vagrant-triggers/issues/21)
+
+IMPROVEMENTS:
+
+  - Do not buffer command output and better integrate in core UI [(#18)](https://github.com/emyl/vagrant-triggers/issues/18)
+
+BUG FIXES:
+
+  - Handle MS-DOS commands better [(#27)](https://github.com/emyl/vagrant-triggers/issues/27)
+
 ## 0.4.4 (December 12, 2014)
 
 BUG FIXES:

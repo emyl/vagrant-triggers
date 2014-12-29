@@ -3,6 +3,8 @@
 .bundle
 pkg/*
 Gemfile.lock
+Gemfile.dev
+Gemfile.dev.lock
 
 coverage
 

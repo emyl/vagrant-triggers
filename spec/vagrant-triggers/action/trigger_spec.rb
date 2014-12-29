@@ -5,16 +5,17 @@ describe VagrantPlugins::Triggers::Action::Trigger do
   let(:env)            { { :action_name => action_name, :machine => machine, :machine_action => machine_action, :ui => ui } }
   let(:condition)      { double("condition") }
   let(:action_name)    { double("action_name") }
-  let(:machine)        { double("machine") }
+  let(:machine)        { double("machine", :ui => ui) }
   let(:machine_action) { double("machine_action") }
 
   let(:ui)             { double("ui", :info => info) }
   let(:info)           { double("info") }
 
-  before do
+  before :each do
     trigger_block = Proc.new { nil }
     @triggers     = [ { :action => machine_action, :condition => condition, :options => { }, :proc => trigger_block } ]
     machine.stub(:name)
+    machine.stub_chain(:config, :trigger, :blacklist).and_return([])
     machine.stub_chain(:config, :trigger, :triggers).and_return(@triggers)
   end
 
@@ -35,7 +36,15 @@ describe VagrantPlugins::Triggers::Action::Trigger do
 
   it "should fire trigger when all conditions are satisfied" do
     dsl = double("dsl")
-    VagrantPlugins::Triggers::DSL.stub(:new).with(ui, machine, @triggers.first[:options]).and_return(dsl)
+    VagrantPlugins::Triggers::DSL.stub(:new).with(machine, @triggers.first[:options]).and_return(dsl)
+    dsl.should_receive(:instance_eval).and_yield
+    described_class.new(app, env, condition).call(env)
+  end
+
+  it "should fire trigger when condition matches and action is :ALL" do
+    @triggers[0][:action] = :ALL
+    dsl = double("dsl")
+    VagrantPlugins::Triggers::DSL.stub(:new).with(machine, @triggers.first[:options]).and_return(dsl)
     dsl.should_receive(:instance_eval).and_yield
     described_class.new(app, env, condition).call(env)
   end
@@ -52,14 +61,20 @@ describe VagrantPlugins::Triggers::Action::Trigger do
     described_class.new(app, env, condition).call(env)
   end
 
+  it "shouldn't fire trigger when the action is blacklisted" do
+    machine.stub_chain(:config, :trigger, :blacklist).and_return([machine_action])
+    VagrantPlugins::Triggers::DSL.should_not_receive(:new)
+    described_class.new(app, env, condition).call(env)
+  end
+
   it "shouldn't fire trigger when condition doesn't match" do
-    @triggers[0][:condition] = "blah"
+    @triggers[0][:condition] = :blah
     VagrantPlugins::Triggers::DSL.should_not_receive(:new)
     described_class.new(app, env, condition).call(env)
   end
 
   it "shouldn't fire trigger when action doesn't match" do
-    @triggers[0][:action] = "blah"
+    @triggers[0][:action] = :blah
     VagrantPlugins::Triggers::DSL.should_not_receive(:new)
     described_class.new(app, env, condition).call(env)
   end
@@ -70,45 +85,8 @@ describe VagrantPlugins::Triggers::Action::Trigger do
     described_class.new(app, env, :instead_of).call(env)
   end
 
-  context ":vm option" do
-    before do
-      machine.stub(:name).and_return(:vm1)
-    end
-
-    it "should fire trigger when :vm option match" do
-      @triggers[0][:options][:vm] = "vm1"
-      VagrantPlugins::Triggers::DSL.should_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "shouldn't fire trigger when :vm option doesn't match" do
-      @triggers[0][:options][:vm] = "vm2"
-      VagrantPlugins::Triggers::DSL.should_not_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "should fire trigger when :vm option is an array and one of the elements match" do
-      @triggers[0][:options][:vm] = ["vm1", "vm2"]
-      VagrantPlugins::Triggers::DSL.should_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "shouldn't fire trigger when :vm option is an array and no element match" do
-      @triggers[0][:options][:vm] = ["vm2", "vm3"]
-      VagrantPlugins::Triggers::DSL.should_not_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "should fire trigger when :vm option is a regex and the pattern match" do
-      @triggers[0][:options][:vm] = /^vm/
-      VagrantPlugins::Triggers::DSL.should_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
-
-    it "shouldn't fire trigger when :vm option is a regex and the pattern doesn't match" do
-      @triggers[0][:options][:vm] = /staging/
-      VagrantPlugins::Triggers::DSL.should_not_receive(:new)
-      described_class.new(app, env, condition).call(env)
-    end
+  it "should handle gracefully a not matching :vm option" do
+    VagrantPlugins::Triggers::DSL.stub(:new).and_raise(VagrantPlugins::Triggers::Errors::NotMatchingMachine)
+    expect { described_class.new(app, env, condition).call(env) }.not_to raise_exception()
   end
 end
