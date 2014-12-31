@@ -76,12 +76,38 @@ For additional details you can take a look to the [VagrantPlugins::Triggers::DSL
 
 Triggers won't run if ```VAGRANT_NO_TRIGGERS``` environment variable is set.
 
+### Attaching to every command
+
+The special name `:ALL` can be used as a wildcard for every vagrant command:
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.trigger.before :ALL do
+    ...
+  end
+end
+```
+
+### Blacklisting commands
+
+Commands can be blacklisted, so that the `:ALL` wildcard has no effect on them:
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.trigger.blacklist :destroy
+  config.trigger.before :ALL do
+    ...
+  end
+end
+```
+
+Multiple commands can be blacklisted using an array.
+
 ## A simple example
 
 Cleanup some temporary files after machine destroy:
 
 ```ruby
-
 Vagrant.configure("2") do |config|
   config.trigger.after :destroy do
     run "rm -Rf tmp/*"
