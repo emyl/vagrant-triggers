@@ -87,7 +87,7 @@ module VagrantPlugins
         # Create the new PATH removing Vagrant bin directory
         # and appending directories specified through the
         # :append_to_path option
-        new_path  = ENV["VAGRANT_INSTALLER_ENV"] ? ENV["PATH"].gsub(/#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}.*?#{File::PATH_SEPARATOR}/, "") : ENV["PATH"]
+        new_path  = ENV["VAGRANT_INSTALLER_ENV"] ? ENV["PATH"].gsub(/#{Regexp.quote(ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"])}.*?#{Regexp.quote(File::PATH_SEPARATOR)}/, "") : ENV["PATH"]
         new_path += Array(@options[:append_to_path]).map { |dir| "#{File::PATH_SEPARATOR}#{dir}" }.join
         ENV["PATH"] = new_path
         @logger.debug("PATH modified: #{ENV["PATH"]}")
