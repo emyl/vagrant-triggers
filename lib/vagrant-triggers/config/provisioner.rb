@@ -6,7 +6,10 @@ module VagrantPlugins
         attr_reader :trigger_body
 
         def initialize
-          @options = {}
+          @options = {
+            :stderr => true,
+            :stdout => true
+          }
         end
 
         def fire(&block)
@@ -14,7 +17,7 @@ module VagrantPlugins
         end
 
         def set_options(options)
-          @options = options
+          @options.merge!(options)
         end
       end
     end
