@@ -1,3 +1,10 @@
+## 0.5.1 (unreleased)
+
+BUG FIXES:
+
+  - ```:stdout``` and ```:stderr``` options defaults to true when using provisioner [(#42)](https://github.com/emyl/vagrant-triggers/issues/42)
+  - Properly escape regexp in DSL [(#46)](https://github.com/emyl/vagrant-triggers/issues/46)
+
 ## 0.5.0 (December 29, 2014)
 
 **BEHAVIOURAL CHANGES:**
