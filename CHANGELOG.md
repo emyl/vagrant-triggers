@@ -2,6 +2,7 @@
 
 BUG FIXES:
 
+  - Change directory to environment root path before running host commands [(#44)](https://github.com/emyl/vagrant-triggers/issues/44)
   - ```:stdout``` and ```:stderr``` options defaults to true when using provisioner [(#42)](https://github.com/emyl/vagrant-triggers/issues/42)
   - Properly escape regexp in DSL [(#46)](https://github.com/emyl/vagrant-triggers/issues/46)
 

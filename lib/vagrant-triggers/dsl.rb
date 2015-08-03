@@ -41,8 +41,10 @@ module VagrantPlugins
           Bundler.with_clean_env do
             build_environment
             @buffer.clear
-            result = Vagrant::Util::Subprocess.execute(command[0], *command[1..-1], :notify => [:stdout, :stderr]) do |channel, data|
-              @command_output.call(channel, data, options)
+            Dir.chdir(@machine.env.root_path) do
+              result = Vagrant::Util::Subprocess.execute(command[0], *command[1..-1], :notify => [:stdout, :stderr]) do |channel, data|
+                @command_output.call(channel, data, options)
+              end
             end
           end
           info I18n.t("vagrant_triggers.action.trigger.command_finished")

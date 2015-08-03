@@ -5,7 +5,8 @@ describe VagrantPlugins::Triggers::DSL do
   let(:result) { double("result", :exit_code => 0, :stderr => stderr) }
   let(:stderr) { double("stderr") }
 
-  let(:machine) { double("machine", :ui => ui) }
+  let(:machine) { double("machine", :env => env, :ui => ui) }
+  let(:env)     { double("env", :root_path => ENV["PWD"]) }
   let(:ui)      { double("ui", :info => info) }
   let(:info)    { double("info") }
 
@@ -70,6 +71,15 @@ describe VagrantPlugins::Triggers::DSL do
     before do
       Vagrant::Util::Subprocess.stub(:execute => result)
       @options = { :notify => [:stdout, :stderr] }
+    end
+
+    it "should change directory to environment root path" do
+      machine.stub_chain(:env, :root_path).and_return("/")
+      Vagrant::Util::Subprocess.should_receive(:execute) do |command|
+        expect(Dir.pwd).to eq("/")
+        result
+      end
+      @dsl.run(@command)
     end
 
     it "should raise an error if executed command exits with non-zero code" do
