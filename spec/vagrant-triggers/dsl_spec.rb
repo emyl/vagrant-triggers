@@ -162,7 +162,7 @@ describe VagrantPlugins::Triggers::DSL do
         File.open("#{ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"]}/bin/#{@command}", "w+", 0700) { |file| }
       end
 
-      it "should raise a CommandUnavailable error" do
+      it "should raise a CommandUnavailable error", :skip_travis => true do
         expect { @dsl.run(@command) }.to raise_error(VagrantPlugins::Triggers::Errors::CommandUnavailable)
       end
 
