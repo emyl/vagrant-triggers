@@ -8,7 +8,7 @@ before_install:
   - gem install bundler -v 1.5.3
 env:
   - SPEC_OPTS="--tag ~skip_travis"
-  - VAGRANT_VERSION=v1.7.1
+  - VAGRANT_VERSION=v1.7.4
 matrix:
   include:
     - env: VAGRANT_VERSION=master
