@@ -96,6 +96,9 @@ module VagrantPlugins
 
         # Add the VAGRANT_NO_TRIGGERS variable to avoid loops
         ENV["VAGRANT_NO_TRIGGERS"] = "1"
+
+        # Skip the subprocess jailbreak introduced in vagrant 1.7.3
+        ENV["VAGRANT_SKIP_SUBPROCESS_JAILBREAK"] = "1"
       end
 
       def process_result(command, result, options)

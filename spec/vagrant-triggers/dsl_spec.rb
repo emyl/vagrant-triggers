@@ -106,6 +106,14 @@ describe VagrantPlugins::Triggers::DSL do
       @dsl.run(@command)
     end
 
+    it "should pass VAGRANT_SKIP_SUBPROCESS_JAILBREAK environment variable to the command" do
+      Vagrant::Util::Subprocess.should_receive(:execute) do |command|
+        expect(ENV).to have_key("VAGRANT_SKIP_SUBPROCESS_JAILBREAK")
+        result
+      end
+      @dsl.run(@command)
+    end
+
     it "should remove escape sequences on UNIX Bourne Shell" do
       command = "echo foo\\ bar"
       Vagrant::Util::Subprocess.should_receive(:execute).with("echo", "foo bar", @options)
