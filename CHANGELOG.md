@@ -1,3 +1,9 @@
+## 0.5.2 (September 9, 2015)
+
+BUG FIXES:
+
+  - Skip subprocess jailbreak introduced in Vagrant 1.7.3 [(#52)](https://github.com/emyl/vagrant-triggers/issues/52)
+
 ## 0.5.1 (August 3, 2015)
 
 BUG FIXES:
