@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
   ...
 
   # run some script before the guest is destroyed
-  config.trigger.after :destroy do
+  config.trigger.before :destroy do
     info "Dumping the database before destroying the VM..."
     run_remote  "bash /vagrant/cleanup.sh"
   end
