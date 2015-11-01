@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/emyl/vagrant-triggers.png?branch=master)](https://travis-ci.org/emyl/vagrant-triggers)
 
-Allow the definition of arbitrary scripts that will run on the host before and/or after Vagrant commands.
+Allow the definition of arbitrary scripts that will run on the host or guest before and/or after Vagrant commands.
 
 ## Installation
 
@@ -13,9 +13,35 @@ Installation is performed in the prescribed manner for Vagrant plugins:
 
     $ vagrant plugin install vagrant-triggers
 
-## Usage
+## Example Usage
 
-### Basic usage
+```ruby
+Vagrant.configure("2") do |config|
+  # Your existing Vagrant configuration
+  ...
+
+  # run some script before the guest is destroyed
+  config.trigger.before :destroy do
+    info "Dumping the database before destroying the VM..."
+    run_remote  "bash /vagrant/cleanup.sh"
+  end
+
+
+  # clean up files on the host after the guest is destroyed
+  config.trigger.after :destroy do
+    run "rm -Rf tmp/*"
+  end
+
+  # start apache on the guest after the guest starts
+  config.trigger.after :up do
+    run_remote "service apache2 start"
+  end
+
+end
+```
+
+
+## Syntax Overview
 
 ```ruby
 Vagrant.configure("2") do |config|
@@ -103,17 +129,7 @@ end
 
 Multiple commands can be blacklisted using an array.
 
-## A simple example
 
-Cleanup some temporary files after machine destroy:
-
-```ruby
-Vagrant.configure("2") do |config|
-  config.trigger.after :destroy do
-    run "rm -Rf tmp/*"
-  end
-end
-```
 
 ## A more detailed example
 
