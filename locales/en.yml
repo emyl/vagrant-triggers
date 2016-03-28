@@ -14,8 +14,8 @@ en:
           Running triggers %{condition} %{action}...
     errors:
       command_failed: |-
-        The command "%{command}" returned a failed exit code. The
-        error output is shown below:
+        The %{context} command "%{command}" returned a failed exit
+        code or an exception. The error output is shown below:
 
         %{stderr}
       command_unavailable: |-

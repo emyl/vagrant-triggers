@@ -228,6 +228,12 @@ describe VagrantPlugins::Triggers::DSL do
       expect { @dsl.run_remote(@command) }.to raise_error(VagrantPlugins::Triggers::Errors::CommandFailed)
     end
 
+    it "should catch communication errors and raise a proper exception" do
+      machine.stub_chain(:communicate, :sudo).and_raise(StandardError)
+      result.stub(:exit_code => 1)
+      expect { @dsl.run_remote(@command) }.to raise_error(VagrantPlugins::Triggers::Errors::CommandFailed)
+    end
+
     it "shouldn't raise an error if executed command exits with non-zero code but :force option was specified" do
       dsl = described_class.new(machine, :force => true)
       result.stub(:exit_code => 1)

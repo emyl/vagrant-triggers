@@ -53,7 +53,7 @@ module VagrantPlugins
         ensure
           ENV.replace(env_backup)
         end
-        process_result(raw_command, result, options)
+        process_result("local", raw_command, result, options)
       end
       alias_method :execute, :run
 
@@ -61,11 +61,16 @@ module VagrantPlugins
         options.merge!(@options) { |key, old, new| old }
         info I18n.t("vagrant_triggers.action.trigger.executing_remote_command", :command => raw_command)
         @buffer.clear
-        exit_code = @machine.communicate.sudo(raw_command, :elevated => true, :good_exit => (0..255).to_a) do |channel, data|
-          @command_output.call(channel, data, options)
+        exit_code = 1
+        begin
+          exit_code = @machine.communicate.sudo(raw_command, :elevated => true, :good_exit => (0..255).to_a) do |channel, data|
+            @command_output.call(channel, data, options)
+          end
+        rescue => e
+          @command_output.call(:stderr, e.message, options)
         end
         info I18n.t("vagrant_triggers.action.trigger.remote_command_finished")
-        process_result(raw_command, Vagrant::Util::Subprocess::Result.new(exit_code, @buffer[:stdout], @buffer[:stderr]), options)
+        process_result("remote", raw_command, Vagrant::Util::Subprocess::Result.new(exit_code, @buffer[:stdout], @buffer[:stderr]), options)
       end
       alias_method :execute_remote, :run_remote
 
@@ -101,9 +106,9 @@ module VagrantPlugins
         ENV["VAGRANT_SKIP_SUBPROCESS_JAILBREAK"] = "1"
       end
 
-      def process_result(command, result, options)
+      def process_result(context, command, result, options)
         if result.exit_code != 0 && !options[:force]
-          raise Errors::CommandFailed, :command => command, :stderr => result.stderr
+          raise Errors::CommandFailed, :context => context, :command => command, :stderr => result.stderr
         end
         result.stdout
       end
