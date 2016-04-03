@@ -5,6 +5,14 @@ require "vagrant/util/subprocess"
 module VagrantPlugins
   module Triggers
     class DSL
+      def self.fire!(trigger, machine)
+        begin
+          dsl = new(machine, trigger[:options])
+          dsl.instance_eval &trigger[:proc] if trigger[:proc]
+        rescue Errors::NotMatchingMachine
+        end
+      end
+
       def initialize(machine, options = {})
         if options[:vm]
           match = false

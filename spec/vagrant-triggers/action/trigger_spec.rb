@@ -57,7 +57,8 @@ describe VagrantPlugins::Triggers::Action::Trigger do
 
   it "shouldn't execute trigger with no command or block" do
     @triggers[0][:proc] = nil
-    VagrantPlugins::Triggers::DSL.should_not_receive(:new)
+    dsl = double("dsl")
+    dsl.should_not_receive(:instance_eval)
     described_class.new(app, env, condition).call(env)
   end
 
