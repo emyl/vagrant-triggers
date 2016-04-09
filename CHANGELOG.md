@@ -1,4 +1,4 @@
-## 0.5.3 (unreleased)
+## 0.5.3 (April 9, 2016)
 
 IMPROVEMENTS:
 
