@@ -25,7 +25,7 @@ module VagrantPlugins
         @buffer  = Hash.new("")
         @logger  = Log4r::Logger.new("vagrant::plugins::triggers::dsl")
         @machine = machine
-        @options = options
+        @options = { :good_exit => [0] }.merge(options)
         @ui      = machine.ui
 
         @command_output = lambda do |channel, data, options|
@@ -115,7 +115,7 @@ module VagrantPlugins
       end
 
       def process_result(context, command, result, options)
-        if result.exit_code != 0 && !options[:force]
+        unless options[:good_exit].include?(result.exit_code) || options[:force]
           raise Errors::CommandFailed, :context => context, :command => command, :stderr => result.stderr
         end
         result.stdout

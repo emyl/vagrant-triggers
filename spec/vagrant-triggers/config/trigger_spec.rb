@@ -12,9 +12,9 @@ describe VagrantPlugins::Triggers::Config::Trigger do
       expect(config.triggers).to eq([])
     end
 
-    it "should default :stdout option to true" do
+    it "should default :good_exit option to [0]" do
       config.before(:up) { run "ls" }
-      expect(config.triggers.first[:options][:stdout]).to eq(true)
+      expect(config.triggers.first[:options][:good_exit]).to eq([0])
     end
 
     it "should default :stderr option to true" do
@@ -22,7 +22,22 @@ describe VagrantPlugins::Triggers::Config::Trigger do
       expect(config.triggers.first[:options][:stderr]).to eq(true)
     end
 
-    it "should override options" do
+    it "should default :stdout option to true" do
+      config.before(:up) { run "ls" }
+      expect(config.triggers.first[:options][:stdout]).to eq(true)
+    end
+
+    it "should override :good_exit option" do
+      config.before(:up, :good_exit => [0, 2]) { run "ls" }
+      expect(config.triggers.first[:options][:good_exit]).to eq([0, 2])
+    end
+
+    it "should override :stderr option" do
+      config.before(:up, :stderr => false) { run "ls" }
+      expect(config.triggers.first[:options][:stderr]).to eq(false)
+    end
+
+    it "should override :stdout option" do
       config.before(:up, :stdout => false) { run "ls" }
       expect(config.triggers.first[:options][:stdout]).to eq(false)
     end

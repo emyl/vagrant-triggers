@@ -88,6 +88,7 @@ end
 
 * ```:append_to_path => ["dir", "dir"]```: additional places where looking for scripts. See [this wiki page](https://github.com/emyl/vagrant-triggers/wiki/The-:append_to_path-option) for details.
 * ```:force => true|false```: continue even if one of the scripts fails (exits with non-zero code). Defaults to false.
+* ```:good_exit => [ ... ]```: good command exit codes. Defaults to ```[0]```. **Don't forget to include 0 if you change the default value, unless you really want**.
 * ```:stderr => true|false```: display standard error from scripts. Defaults to true.
 * ```:stdout => true|false```: display standard output from scripts. Defaults to true.
 * ```:vm => ["vm1", /vm[2-3]/]```: fire only for matching virtual machines. Value can be a string, a regexp or an array of strings and/or regexps.

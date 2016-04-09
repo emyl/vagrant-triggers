@@ -93,6 +93,12 @@ describe VagrantPlugins::Triggers::DSL do
       expect { dsl.run(@command) }.not_to raise_error()
     end
 
+    it "shouldn't raise an error if executed command exits with non-zero code but the code is included in the :good_exit array" do
+      dsl = described_class.new(machine, :good_exit => [0, 2])
+      result.stub(:exit_code => 2)
+      expect { dsl.run(@command) }.not_to raise_error()
+    end
+
     it "should return standard output" do
       dsl = described_class.new(machine)
       expect(dsl.run(@command)).to eq("Some output")
@@ -237,6 +243,12 @@ describe VagrantPlugins::Triggers::DSL do
     it "shouldn't raise an error if executed command exits with non-zero code but :force option was specified" do
       dsl = described_class.new(machine, :force => true)
       result.stub(:exit_code => 1)
+      expect { dsl.run_remote(@command) }.not_to raise_error()
+    end
+
+    it "shouldn't raise an error if executed command exits with non-zero code but the code is included in the :good_exit array" do
+      dsl = described_class.new(machine, :good_exit => [0, 2])
+      result.stub(:exit_code => 2)
       expect { dsl.run_remote(@command) }.not_to raise_error()
     end
 

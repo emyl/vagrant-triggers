@@ -6,7 +6,7 @@ module VagrantPlugins
 
         def initialize
           @blacklist = []
-          @options   = { :stdout => true, :stderr => true }
+          @options   = { :good_exit => [0], :stderr => true, :stdout => true }
           @triggers  = []
         end
 

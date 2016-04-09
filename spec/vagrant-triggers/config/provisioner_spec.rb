@@ -4,12 +4,16 @@ describe VagrantPlugins::Triggers::Config::Provisioner do
   let(:config)  { described_class.new }
 
   describe "defaults" do
-    it "should default :stdout option to true" do
-      expect(config.options[:stdout]).to be true
+    it "should default :good_exit option to [0]" do
+      expect(config.options[:good_exit]).to eq([0])
     end
 
     it "should default :stderr option to true" do
       expect(config.options[:stderr]).to be true
+    end
+
+    it "should default :stdout option to true" do
+      expect(config.options[:stdout]).to be true
     end
   end
 

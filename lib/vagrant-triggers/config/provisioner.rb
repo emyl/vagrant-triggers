@@ -7,8 +7,9 @@ module VagrantPlugins
 
         def initialize
           @options = {
-            :stderr => true,
-            :stdout => true
+            :good_exit => [0],
+            :stderr    => true,
+            :stdout    => true
           }
         end
 
