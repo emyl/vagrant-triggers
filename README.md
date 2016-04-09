@@ -26,7 +26,6 @@ Vagrant.configure("2") do |config|
     run_remote  "bash /vagrant/cleanup.sh"
   end
 
-
   # clean up files on the host after the guest is destroyed
   config.trigger.after :destroy do
     run "rm -Rf tmp/*"
@@ -39,7 +38,6 @@ Vagrant.configure("2") do |config|
 
 end
 ```
-
 
 ## Syntax Overview
 
