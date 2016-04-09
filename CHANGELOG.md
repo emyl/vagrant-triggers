@@ -1,3 +1,9 @@
+## 0.5.3 (unreleased)
+
+BUG FIXES:
+
+  - Gracefully catch communication errors [(#55)](https://github.com/emyl/vagrant-triggers/issues/55)
+
 ## 0.5.2 (September 9, 2015)
 
 BUG FIXES:
