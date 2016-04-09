@@ -1,5 +1,9 @@
 ## 0.5.3 (unreleased)
 
+IMPROVEMENTS:
+
+  - Add ```:good_exit``` option for specifying custom positive exit codes [(#37)](https://github.com/emyl/vagrant-triggers/issues/37)
+
 BUG FIXES:
 
   - Gracefully catch communication errors [(#55)](https://github.com/emyl/vagrant-triggers/issues/55)
