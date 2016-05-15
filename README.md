@@ -6,12 +6,15 @@ Allow the definition of arbitrary scripts that will run on the host or guest bef
 
 ## Installation
 
-Ensure you have downloaded and installed Vagrant 1.2+ from the
+Ensure you have downloaded and installed Vagrant from the
 [Vagrant downloads page](http://downloads.vagrantup.com/).
 
 Installation is performed in the prescribed manner for Vagrant plugins:
 
     $ vagrant plugin install vagrant-triggers
+
+:warning: Altough the plugin should work with any version of Vagrant above 1.2,
+testing is done only for versions 1.7+.
 
 ## Example Usage
 

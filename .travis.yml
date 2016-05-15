@@ -5,10 +5,8 @@ before_install:
   - gem update --system
   - rvm @global do gem uninstall -ax bundler
   - gem uninstall -ax bundler
-  - gem install bundler -v 1.5.3
+  - gem install bundler -v 1.10.5
 env:
-  global:
-    - SPEC_OPTS="--tag ~skip_travis"
   matrix:
     - VAGRANT_VERSION=v1.8.1
 matrix:
@@ -17,16 +15,6 @@ matrix:
       rvm: 2.2.3
     - env: VAGRANT_VERSION=v1.7.4
       rvm: 2.0.0
-    - env: VAGRANT_VERSION=v1.6.5
-      rvm: 2.0.0
-    - env: VAGRANT_VERSION=v1.5.4
-      rvm: 2.0.0
-    - env: VAGRANT_VERSION=v1.4.3
-      rvm: 2.0.0
-    - env: VAGRANT_VERSION=v1.3.5
-      rvm: 1.9.3
-    - env: VAGRANT_VERSION=v1.2.7
-      rvm: 1.9.3
   allow_failures:
     - env: VAGRANT_VERSION=master
       rvm: 2.2.3
