@@ -13,7 +13,7 @@ Installation is performed in the prescribed manner for Vagrant plugins:
 
     $ vagrant plugin install vagrant-triggers
 
-:warning: Altough the plugin should work with any version of Vagrant above 1.2,
+:warning: Although the plugin should work with any version of Vagrant above 1.2,
 testing is done only for versions 1.7+.
 
 ## Example Usage
