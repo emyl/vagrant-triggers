@@ -1,4 +1,3 @@
-require "bundler"
 require "log4r"
 require "vagrant/util/subprocess"
 
@@ -46,7 +45,7 @@ module VagrantPlugins
         env_backup = ENV.to_hash
         begin
           result = nil
-          Bundler.with_clean_env do
+          Vagrant::Util::Env.with_clean_env do
             build_environment
             @buffer.clear
             Dir.chdir(@machine.env.root_path) do
