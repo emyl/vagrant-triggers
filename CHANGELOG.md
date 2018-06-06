@@ -1,3 +1,7 @@
+## 0.5.4 (June 6, 2018)
+
+  - Fixes Vagrant 1.9+ compatability.
+
 ## 0.5.3 (April 9, 2016)
 
 IMPROVEMENTS:
